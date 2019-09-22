@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dbClient = require('./dbClient');
+const debug = require('debug')('middleware');
 
 module.exports = {
   authorize: async (req, res, next) => {
@@ -29,5 +30,17 @@ module.exports = {
           }
         });
     }
+  },
+  grantAccess: (req, res, next) => {
+    if (res.locals.user.permissions.indexOf(res.locals.endpoint.permissionNeeded) !== -1){
+      return next();
+    }
+    res.status(403);
+    res.json({
+      success: false,
+      payload: {
+        message: 'you do not have enough permissions'
+      }
+    })
   }
 }

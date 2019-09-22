@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const debug = require('debug')('server');
 const config = require('./config');
-const dbClient = require('./utils/dbClient');
 
 //Express app initialization
 var app = express();
