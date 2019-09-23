@@ -3,9 +3,36 @@ const bcrypt = require('bcrypt');
 const debug = require('debug')('route');
 const dbClient = require('../utils/dbClient');
 const { authorize, grantAccess } = require('../utils/middlewares');
+const userSanitizer = require('../utils/sanitizers').user;
 
-router.get('/', authorize, grantAccess, async (req, res) => {
+router.get('/', authorize, async (req, res) => {
   res.json(await dbClient.user.getUser(res.locals.user.id));
+});
+
+router.patch('/', authorize, async (req, res) => {
+  const patch = userSanitizer(req.body);
+  const fields = Object.keys(patch);
+  if (!fields.length) return res.status(422).json({
+    success: false,
+    payload: {
+      message: 'invalid patch'
+    }
+  });
+  const patching = await dbClient.patch('users', res.locals.user.id, patch);
+  if (patching){
+    debug('The user was patched successfuly');
+    res.json({
+      success: true,
+    });
+  } else {
+    debug('Error while patching the user');
+    res.json({
+      success: false,
+      payload: {
+        message: 'there was an error while trying to update the resource'
+      }
+    })
+  }
 });
 
 router.post('/signup', async (req, res) => {

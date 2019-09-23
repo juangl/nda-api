@@ -12,7 +12,7 @@ function dbClient(){
     }).promise();
 
   return {
-    user:{
+    user: {
       async getRoleId(type){
         return (await connection.query(`SELECT id as roleId FROM roles WHERE name="${type}"`))[0][0].roleId;
       },
@@ -70,6 +70,16 @@ function dbClient(){
           LEFT JOIN permissions b ON a.permissionId=b.id;
         `))[0].map(each => each.permission);
       }
+    },
+    async patch(tableName, resourceId, sanitized){
+      let queriedFields = '';
+      for(each in sanitized){
+        const isString = typeof each === 'string';
+        queriedFields += ` ${each} = ${isString ? '"' : ''}${sanitized[each]}${isString ? '"' : ''},`
+      }
+      queriedFields = queriedFields.substring(0, queriedFields.length - 1);
+      debug(`Patching ${tableName} with`, queriedFields);
+      return !!(await connection.query(`UPDATE ${tableName} SET${queriedFields} WHERE id = ${resourceId}`))[0].affectedRows;
     }
   }
 
