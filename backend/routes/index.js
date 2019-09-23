@@ -9,10 +9,6 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/login', (req, res) => {
-
-});
-
 router.use('/users/', users);
 
 

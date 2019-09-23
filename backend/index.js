@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/', require('./routes'))
+app.use(require('./routes'))
 
 app.listen(app.get('port'), () => {
   debug(`Listening on port ${app.get('port')}`);
