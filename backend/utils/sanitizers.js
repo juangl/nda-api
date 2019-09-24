@@ -6,13 +6,23 @@ const userModel = {
   phoneNumber: 'string'
 }
 
+const storeModel = {
+  name: 'string',
+  category: 'string',
+  saying: 'string',
+  address: 'string'
+}
 
-module.exports = {
-  user(data){
-    let sanitized = {}
-    for(each in data){
-      if(each in userModel && typeof data[each] === userModel[each] ) sanitized[each] = data[each];
-    }
-    return sanitized;
+const types = {
+  user: userModel,
+  store: storeModel
+}
+
+module.exports = function(type, data){
+  const model = types[type];
+  let sanitized = {}
+  for(each in data){
+    if(each in model && typeof data[each] === model[each] ) sanitized[each] = data[each];
   }
+  return sanitized;
 }

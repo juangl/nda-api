@@ -148,6 +148,9 @@ function dbClient(){
         result.ratedByUser = !!result.userRatings;
         delete result.userRatings;
         return result;
+      },
+      async verifyProperty(storeId, userId){
+        return !!(await connection.query(`SELECT COUNT(*) as count FROM stores WHERE id = ${storeId} AND ownerId = ${userId}`))[0][0].count;
       }
     },
     async patch(tableName, resourceId, sanitized){
