@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const users = require('./users');
+const stores = require('./stores');
 
 
 router.get('/', (req, res) => {
@@ -9,7 +10,9 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/users/', users);
+router.use('/users', users);
+
+router.use('/stores', stores);
 
 
 module.exports = router;

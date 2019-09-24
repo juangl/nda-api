@@ -71,6 +71,85 @@ function dbClient(){
         `))[0].map(each => each.permission);
       }
     },
+    store: {
+      async getStores(category){
+        let categoryId;
+        let baseQuery = `SELECT * FROM stores`;
+        if (category){
+          const result = (await connection.query(`SELECT id FROM categories WHERE category = "${category}"`))[0];
+          if (result.length) categoryId = result[0].id;
+        }
+
+        if (categoryId){
+          baseQuery += ` WHERE categoryId = ${categoryId}`;
+        }
+
+        const finalQuery = `
+        SELECT *, a.id as id FROM
+          (${baseQuery}) a
+
+        LEFT JOIN
+
+          (SELECT
+            entityId,
+            AVG(stars) as rating,
+            COUNT(stars) as whoRated,
+            id
+          FROM ratings
+          WHERE
+            entityType = "store") b
+          ON a.id = b.entityId
+        `
+
+        return (await connection.query(finalQuery))[0];
+      },
+      async getStore(storeId, userId){
+        let result = (await connection.query(`
+
+        SELECT * FROM 
+        (SELECT * FROM stores WHERE id = ${storeId}) a
+
+        JOIN
+
+        (SELECT a.avg as rating, a.count as whoRated, b.userRatings FROM
+          (SELECT
+            AVG(stars) as avg,
+            COUNT(stars) as count
+          FROM ratings
+          WHERE
+            entityType = "store" AND
+            entityId="${storeId}") a
+
+        JOIN
+
+        (SELECT
+          COUNT(*) as userRatings
+        FROM ratings
+        WHERE
+          entityType = "store" AND
+          entityId = ${storeId} AND
+          userId = ${userId}) b) b
+        `))[0];
+        if(!result.length){
+          // Send an error
+          return null;
+        }
+        result = result[0];
+
+        const images = (await connection.query(`
+        SELECT
+          url
+        FROM images
+        WHERE
+          entityType = "store" AND
+          entityId = ${storeId}
+        `))[0].map(({ url }) => url);
+        result.images = images;
+        result.ratedByUser = !!result.userRatings;
+        delete result.userRatings;
+        return result;
+      }
+    },
     async patch(tableName, resourceId, sanitized){
       let queriedFields = '';
       for(each in sanitized){

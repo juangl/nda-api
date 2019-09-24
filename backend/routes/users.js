@@ -1,6 +1,6 @@
 const router = require('../utils/router')('users');
 const bcrypt = require('bcrypt');
-const debug = require('debug')('route');
+const debug = require('debug')('users');
 const dbClient = require('../utils/dbClient');
 const { authorize, grantAccess } = require('../utils/middlewares');
 const userSanitizer = require('../utils/sanitizers').user;
