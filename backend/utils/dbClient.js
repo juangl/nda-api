@@ -102,7 +102,7 @@ function dbClient(){
         `
 
         const stores = (await connection.query(finalQuery))[0];
-        
+
         for(each in stores){
           stores[each].images = (await connection.query(`
             SELECT
@@ -131,7 +131,7 @@ function dbClient(){
           FROM ratings
           WHERE
             entityType = "store" AND
-            entityId="${storeId}") a
+            entityId = "${storeId}") a
 
         JOIN
 
@@ -157,7 +157,54 @@ function dbClient(){
           entityType = "store" AND
           entityId = ${storeId}
         `))[0].map(({ url }) => url);
+
+        let products = (await connection.query(`
+        SELECT
+          id,
+          name,
+          availability,
+          maxQuantity
+        FROM products
+        WHERE
+          storeId = ${storeId}
+        `))[0];
+
+        for(each in products){
+          products[each].images = (await connection.query(`
+            SELECT
+              url
+            FROM images
+            WHERE
+              entityType = "product" AND
+              entityId = ${products[each].id}
+          `))[0];
+
+          Object.assign(products[each], (await connection.query(`
+          SELECT * FROM
+            (SELECT
+              AVG(stars) as rating,
+              COUNT(stars) as whoRated
+            FROM ratings
+            WHERE
+              entityType = "product" AND
+              entityId = ${products[each].id}) a
+            
+            JOIN
+
+            (SELECT
+              COUNT(*) as userRatings
+            FROM ratings
+            WHERE
+              entityType = "product" AND
+              entityId = ${userId}) b
+          `))[0][0])
+
+          products[each].ratedByUser = !!products[each].userRatings;
+          delete products[each].userRatings;
+        }
+
         result.images = images;
+        result.products = products;
         result.ratedByUser = !!result.userRatings;
         delete result.userRatings;
         return result;
