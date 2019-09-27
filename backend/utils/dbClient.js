@@ -101,7 +101,20 @@ function dbClient(){
           ON a.id = b.entityId
         `
 
-        return (await connection.query(finalQuery))[0];
+        const stores = (await connection.query(finalQuery))[0];
+        
+        for(each in stores){
+          stores[each].images = (await connection.query(`
+            SELECT
+              url
+            FROM images
+            WHERE
+              entityType = "store" AND
+              entityId = ${stores[each].id}
+          `))[0];
+        }
+
+        return stores;
       },
       async getStore(storeId, userId){
         let result = (await connection.query(`
