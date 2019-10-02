@@ -11,6 +11,14 @@ function dbClient(){
       database: process.env.DB_NAME
     }).promise();
 
+    async function query(query){
+      try{
+        return (await connection.query(query))[0];
+      } catch (e){
+        return new Error(e instanceof Error ? e.message : JSON.stringify(e));
+      }
+    }
+
   return {
     user: {
       async getRoleId(type){
@@ -145,7 +153,7 @@ function dbClient(){
         `))[0];
         if(!result.length){
           // Send an error
-          return null;
+          return result;
         }
         result = result[0];
 
@@ -211,6 +219,24 @@ function dbClient(){
       },
       async verifyProperty(storeId, userId){
         return !!(await connection.query(`SELECT COUNT(*) as count FROM stores WHERE id = ${storeId} AND ownerId = ${userId}`))[0][0].count;
+      },
+      async createStore({name, category, saying, address, ownerId}){
+        return await query(`
+          INSERT INTO stores(
+            name,
+            category,
+            saying,
+            address,
+            ownerId
+          )
+          VALUES(
+            "${name}",
+            "${category}",
+            "${saying}",
+            "${address}",
+            ${ownerId}
+          );
+        `);
       }
     },
     async patch(tableName, resourceId, sanitized){
@@ -228,8 +254,4 @@ function dbClient(){
 
 }
 
-
-
 module.exports = dbClient();
-
-

@@ -3,59 +3,37 @@ const debug = require('debug')('stores');
 const dbClient = require('../utils/dbClient');
 const { authorize, grantAccess } = require('../utils/middlewares');
 const sanitizer = require('../utils/sanitizers');
+const { respond } = require('../utils/general');
 
 router.get('/', authorize, grantAccess, async (req, res) => {
   const category = req.query.category;
-  res.json({
-    success: true,
-    payload: await dbClient.store.getStores(category)
-  });
+  respond(await dbClient.store.getStores(category), res);
 });
 
 router.get('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-  const result = await dbClient.store.getStore(storeId, res.locals.user.id);
-  if(!result){
-    return res.json({
-      success: false,
-      payload: {
-        message: 'the store was not found'
-      }
-    });
-  }
-  res.json({
-    success: true,
-    payload: result
-  })
+  respond(await dbClient.store.getStore(storeId, res.locals.user.id), res);
+});
+
+router.post('/', authorize, grantAccess, async (req, res) => {
+  const ownerId = res.locals.user.id;
+  const ownerInfo = await dbClient.user.getUser(ownerId);
+  if(ownerInfo.role !== 'partner') return respond(new Error('your account type is not the needed type to create a store'), res);
+  let newStore = sanitizer('store', req.body, true, true);
+  newStore.ownerId = ownerId;
+  respond(await dbClient.store.createStore(newStore), res);
 });
 
 router.patch('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-
-  const verification = await dbClient.store.verifyProperty(storeId, res.locals.user.id);
-
+  const verification = await dbClient.store.verifyProperty(storeId, res.locals.user.id); //TODO: verify the property of the store.
   const patch = sanitizer('store', req.body);
   const fields = Object.keys(patch);
-  if (!fields.length) return res.status(422).json({
-    success: false,
-    payload: {
-      message: 'invalid patch'
-    }
-  });
-  const patching = await dbClient.patch('stores', storeId, patch);
-  if (!patching){
-    debug('Error while patching the store');
-    return res.json({
-      success: false,
-      payload: {
-        message: 'there was an error while trying to update the resource'
-      }
-    }) 
+  if (!fields.length){
+    res.status(422);
+    return respond(new Error('invalid patch'), res);
   }
-  debug('The store was patched successfuly');
-    res.json({
-      success: true,
-    });
+  respond(await dbClient.patch('stores', storeId, patch), res);
 });
 
 module.exports = router;
