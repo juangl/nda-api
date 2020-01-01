@@ -1,5 +1,5 @@
 module.exports = {
-  respond(result, res) {
+  respond(result, res, callback) {
     switch (true) {
       case result instanceof Error:
         res.json({
@@ -8,6 +8,7 @@ module.exports = {
             message: result.message,
           },
         });
+        callback(true);
         break;
       case result.__proto__.constructor.name === 'ResultSetHeader':
         let response = {
@@ -19,6 +20,7 @@ module.exports = {
               'there was an error while trying to insert or update the resource',
           };
         res.json(response);
+        callback(!response.success);
         break;
       case Array.isArray(result):
         if (!result.length) {
@@ -28,18 +30,21 @@ module.exports = {
               message: 'there was not found any result',
             },
           });
+          callback(true);
           break;
         }
         res.json({
           success: true,
           payload: result,
         });
+        callback(false);
         break;
       case typeof result === 'object':
         res.json({
           success: true,
           payload: result,
         });
+        callback(false);
         break;
     }
   },

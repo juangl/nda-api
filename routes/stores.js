@@ -12,20 +12,31 @@ router.get('/', authorize, grantAccess, async (req, res) => {
 
 router.get('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-  respond(await dbClient.store.getStore(storeId, res.locals.user.id), res);
+  respond(
+    await dbClient.store.getStore(storeId, res.locals.user.id),
+    res,
+    error => {
+      if (error) {
+        debug(`Get store with id ${storeId} has failed`);
+      } else {
+        debug(`Get store with id ${storeId} has been successful`);
+      }
+    },
+  );
 });
 
 router.post('/', authorize, grantAccess, async (req, res) => {
   const ownerId = res.locals.user.id;
-  const ownerInfo = await dbClient.user.getUser(ownerId);
-  if (ownerInfo.role !== 'partner')
-    return respond(
-      new Error('your account type is not the needed type to create a store'),
-      res,
-    );
+  debug(`User with id ${ownerId} is creating a new store`);
   let newStore = sanitizer('store', req.body, true, true);
   newStore.ownerId = ownerId;
-  respond(await dbClient.store.createStore(newStore), res);
+  respond(await dbClient.store.createStore(newStore), res, error => {
+    if (error) {
+      debug(`User with id ${ownerId} has failed by creating a new store`);
+    } else {
+      debug(`User with id ${ownerId} has created a new store`);
+    }
+  });
 });
 
 router.patch('/:id', authorize, grantAccess, async (req, res) => {
@@ -40,7 +51,13 @@ router.patch('/:id', authorize, grantAccess, async (req, res) => {
     res.status(422);
     return respond(new Error('invalid patch'), res);
   }
-  respond(await dbClient.patch('stores', storeId, patch), res);
+  respond(await dbClient.patch('stores', storeId, patch), res, error => {
+    if (error) {
+      debug(`Store with id ${storeId} has failed by being patched`);
+    } else {
+      debug(`Store with id ${storeId} was succesfully patched`);
+    }
+  });
 });
 
 module.exports = router;
