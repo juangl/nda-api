@@ -1,10 +1,10 @@
 module.exports = sufix => {
   const router = require('express').Router();
   router.use('/', (req, res, next) => {
-    res.locals.endpoint = {};
+    res.locals.endpoint = res.locals.endpoint || {};
     res.locals.endpoint.permissionNeeded = (() => {
       let prefix = null;
-      switch(req.method){
+      switch (req.method) {
         case 'GET':
           prefix = 'read';
           break;
@@ -17,10 +17,11 @@ module.exports = sufix => {
         case 'DELETE':
           prefix = 'delete';
           break;
-        default: prefix = 'read';
+        default:
+          prefix = 'read';
       }
       return `${prefix}_${sufix}`;
-    })()
+    })();
     next();
   });
   return router;

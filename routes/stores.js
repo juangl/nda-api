@@ -18,7 +18,11 @@ router.get('/:id', authorize, grantAccess, async (req, res) => {
 router.post('/', authorize, grantAccess, async (req, res) => {
   const ownerId = res.locals.user.id;
   const ownerInfo = await dbClient.user.getUser(ownerId);
-  if(ownerInfo.role !== 'partner') return respond(new Error('your account type is not the needed type to create a store'), res);
+  if (ownerInfo.role !== 'partner')
+    return respond(
+      new Error('your account type is not the needed type to create a store'),
+      res,
+    );
   let newStore = sanitizer('store', req.body, true, true);
   newStore.ownerId = ownerId;
   respond(await dbClient.store.createStore(newStore), res);
@@ -26,10 +30,13 @@ router.post('/', authorize, grantAccess, async (req, res) => {
 
 router.patch('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-  const verification = await dbClient.store.verifyProperty(storeId, res.locals.user.id); //TODO: verify the property of the store.
+  const verification = await dbClient.store.verifyProperty(
+    storeId,
+    res.locals.user.id,
+  ); //TODO: verify the property of the store.
   const patch = sanitizer('store', req.body);
   const fields = Object.keys(patch);
-  if (!fields.length){
+  if (!fields.length) {
     res.status(422);
     return respond(new Error('invalid patch'), res);
   }

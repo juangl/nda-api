@@ -12,26 +12,27 @@ router.get('/', authorize, async (req, res) => {
 router.patch('/', authorize, async (req, res) => {
   const patch = sanitizer('user', req.body);
   const fields = Object.keys(patch);
-  if (!fields.length) return res.status(422).json({
-    success: false,
-    payload: {
-      message: 'invalid patch'
-    }
-  });
+  if (!fields.length)
+    return res.status(422).json({
+      success: false,
+      payload: {
+        message: 'invalid patch',
+      },
+    });
   const patching = await dbClient.patch('users', res.locals.user.id, patch);
-  if (!patching){
+  if (!patching) {
     debug('Error while patching the user');
     return res.json({
       success: false,
       payload: {
-        message: 'there was an error while trying to update the resource'
-      }
-    }) 
+        message: 'there was an error while trying to update the resource',
+      },
+    });
   }
   debug('The user was patched successfuly');
-    res.json({
-      success: true,
-    });
+  res.json({
+    success: true,
+  });
 });
 
 router.post('/signup', async (req, res) => {
@@ -42,13 +43,13 @@ router.post('/signup', async (req, res) => {
   user.password = await bcrypt.hash(user.password, 10);
   user.roleId = await dbClient.user.getRoleId(type);
   const response = await dbClient.user.register(user);
-  if (!response){
+  if (!response) {
     return res.json({
       success: false,
       payload: {
-        message: 'Something went wrong while your registration'
-      }
-    })
+        message: 'Something went wrong while your registration',
+      },
+    });
   }
   res.json(await dbClient.user.login(user.email, user._password));
 });
@@ -59,9 +60,7 @@ router.post('/signin', async (req, res) => {
   res.json(await dbClient.user.login(user.email, user.password));
 });
 
-router.put('/', (req, res) => {
-
-});
+router.put('/', (req, res) => {});
 
 // router.delete('/', (req, res) => {
 

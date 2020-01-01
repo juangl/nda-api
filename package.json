@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "npx prettier --write '**/*.js'"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "express-validator": "^6.2.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^1.7.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "prettier": "^1.19.1"
   }
 }

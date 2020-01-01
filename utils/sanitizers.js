@@ -5,8 +5,8 @@ const userModel = {
   password: 'string',
   firstName: 'string',
   lastName: 'string',
-  phoneNumber: 'string'
-}
+  phoneNumber: 'string',
+};
 
 const storeModel = {
   name: 'string',
@@ -15,40 +15,40 @@ const storeModel = {
   address: 'string',
   ownerId: {
     postable: true,
-    type: 'number'
-  }
-}
+    type: 'number',
+  },
+};
 
 const types = {
   user: userModel,
-  store: storeModel
-}
+  store: storeModel,
+};
 
-module.exports = function(type, data, required, post){
+module.exports = function(type, data, required, post) {
   const model = types[type];
-  let sanitized = {}
-  for(each in data){
-    if(each in model){
-      if(
+  let sanitized = {};
+  for (each in data) {
+    if (each in model) {
+      if (
         post &&
         typeof model[each] === 'object' &&
         model[each].postable &&
         model[each].type &&
         typeof data[each] === model[each].type
-      ){
+      ) {
         sanitized[each] = data[each];
         continue;
       }
-      if(typeof data[each] === model[each]) sanitized[each] = data[each];
+      if (typeof data[each] === model[each]) sanitized[each] = data[each];
     }
   }
   debug(sanitized);
-  if(required){
-    for(each in model){
-      if (!(each in sanitized)){
+  if (required) {
+    for (each in model) {
+      if (!(each in sanitized)) {
         return false;
       }
     }
   }
   return sanitized;
-}
+};
