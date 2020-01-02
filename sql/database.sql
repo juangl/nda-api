@@ -1,4 +1,5 @@
-CREATE DATABASE IF NOT EXISTS domi_app;
+DROP DATABASE IF EXISTS domi_app;
+CREATE DATABASE domi_app;
 
 USE domi_app;
 
@@ -66,10 +67,20 @@ VALUES
   (21, 'create_store_ratings'),
   (22, 'read_store_ratings'),
   (23, 'update_store_ratings'),
-  (24, 'delete_store_ratings');
+  (24, 'delete_store_ratings'),
+/*liked products*/
+  (25, 'create_liked_products'),
+  (26, 'read_liked_products'),
+  (27, 'update_liked_products'),
+  (28, 'delete_liked_products'),
+/*liked stores*/
+  (29, 'create_liked_stores'),
+  (30, 'read_liked_stores'),
+  (31, 'update_liked_stores'),
+  (32, 'delete_liked_stores');
 
 INSERT INTO rolesPermissions
-  (id, roleId, permissionId)
+  (roleId, permissionId)
 VALUES
 /*
   client permissions
@@ -84,25 +95,41 @@ VALUES
     +create_store_ratings
     +read_store_ratings
     +update_store_ratings
+    +create_liked_products
+    +read_liked_products
+    +update_liked_products
+    +delete_liked_products
+    +create_liked_stores
+    +read_liked_stores
+    +update_liked_stores
+    +delete_liked_stores
 */
-  (1, 1, 1),
-  (2, 1, 2),
-  (3, 1, 6),
-  (4, 1, 10),
-  (5, 1, 13),
-  (6, 1, 14),
-  (7, 1, 15),
-  (8, 1, 18),
-  (9, 1, 21),
-  (10, 1, 22),
-  (11, 1, 23),
+  (1, 1),
+  (1, 2),
+  (1, 6),
+  (1, 10),
+  (1, 13),
+  (1, 14),
+  (1, 15),
+  (1, 18),
+  (1, 21),
+  (1, 22),
+  (1, 23),
+  (1, 25),
+  (1, 26),
+  (1, 27),
+  (1, 28),
+  (1, 29),
+  (1, 30),
+  (1, 31),
+  (1, 32),
 /*
   admin permissions
     +create_stores
     +read_stores
 */
-  (12, 2, 5),
-  (13, 2, 6),
+  (2, 5),
+  (2, 6),
 /*
   partner permissions
     +read_orders
@@ -119,19 +146,19 @@ VALUES
     +delete_store_images
     +read_store_ratings
 */
-  (14, 3, 2),
-  (15, 3, 3),
-  (16, 3, 4),
-  (17, 3, 9),
-  (18, 3, 10),
-  (19, 3, 11),
-  (20, 3, 12),
-  (21, 3, 14),
-  (22, 3, 17),
-  (23, 3, 18),
-  (24, 3, 19),
-  (25, 3, 20),
-  (26, 3, 22);
+  (3, 2),
+  (3, 3),
+  (3, 4),
+  (3, 9),
+  (3, 10),
+  (3, 11),
+  (3, 12),
+  (3, 14),
+  (3, 17),
+  (3, 18),
+  (3, 19),
+  (3, 20),
+  (3, 22);
 
 /*Users*/
 CREATE TABLE users(
@@ -230,6 +257,15 @@ CREATE TABLE allowedLocations(
   name VARCHAR(50) NOT NULL,
   areaCoordinates TEXT NOT NULL,
   PRIMARY KEY (id)
+) ENGINE=INNODB;
+
+CREATE TABLE likedItems(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  userId INTEGER NOT NULL,
+  entityType ENUM('store', 'product') NOT NULl,
+  entityId INTEGER NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (userId) REFERENCES users(id)
 ) ENGINE=INNODB;
 
 COMMIT;

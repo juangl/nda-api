@@ -1,4 +1,4 @@
-const router = require('../utils/router')('users');
+const router = require('../utils/router')(['users']);
 const bcrypt = require('bcrypt');
 const debug = require('debug')('users');
 const dbClient = require('../utils/dbClient');
@@ -6,7 +6,7 @@ const { authorize, grantAccess } = require('../utils/middlewares');
 const sanitizer = require('../utils/sanitizers');
 
 router.get('/', authorize, async (req, res) => {
-  res.json(await dbClient.user.getUser(res.locals.user.id));
+  res.json(await dbClient.user.getUser(req.locals.user.id));
 });
 
 router.patch('/', authorize, async (req, res) => {
@@ -19,7 +19,7 @@ router.patch('/', authorize, async (req, res) => {
         message: 'invalid patch',
       },
     });
-  const patching = await dbClient.patch('users', res.locals.user.id, patch);
+  const patching = await dbClient.patch('users', req.locals.user.id, patch);
   if (!patching) {
     debug('Error while patching the user');
     return res.json({

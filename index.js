@@ -20,6 +20,7 @@ app.use(bodyParser.json(config.bodyParser));
 app.use(bodyParser.raw(config.bodyParser));
 
 app.use((req, res, next) => {
+  req.locals = req.locals || {};
   debug(`Request ${req.method} ${req.url}`);
   next();
 });

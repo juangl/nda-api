@@ -1,4 +1,4 @@
-const router = require('../utils/router')('stores');
+const router = require('../utils/router')(['stores']);
 const debug = require('debug')('stores');
 const dbClient = require('../utils/dbClient');
 const { authorize, grantAccess } = require('../utils/middlewares');
@@ -13,7 +13,7 @@ router.get('/', authorize, grantAccess, async (req, res) => {
 router.get('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
   respond(
-    await dbClient.store.getStore(storeId, res.locals.user.id),
+    await dbClient.store.getStore(storeId, req.locals.user.id),
     res,
     error => {
       if (error) {
@@ -26,7 +26,7 @@ router.get('/:id', authorize, grantAccess, async (req, res) => {
 });
 
 router.post('/', authorize, grantAccess, async (req, res) => {
-  const ownerId = res.locals.user.id;
+  const ownerId = req.locals.user.id;
   debug(`User with id ${ownerId} is creating a new store`);
   let newStore = sanitizer('store', req.body, true, true);
   newStore.ownerId = ownerId;
@@ -43,7 +43,7 @@ router.patch('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
   const verification = await dbClient.store.verifyProperty(
     storeId,
-    res.locals.user.id,
+    req.locals.user.id,
   ); //TODO: verify the property of the store.
   const patch = sanitizer('store', req.body);
   const fields = Object.keys(patch);

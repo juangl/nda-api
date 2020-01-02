@@ -288,6 +288,15 @@ function dbClient() {
         `);
       },
     },
+    likedItems: {
+      async getLiked(userId) {
+        const result = query(`
+            SELECT * FROM likedItems
+            WHERE userId=${userId}
+          `);
+        console.log(result);
+      },
+    },
     async patch(tableName, resourceId, sanitized) {
       let queriedFields = '';
       for (each in sanitized) {
