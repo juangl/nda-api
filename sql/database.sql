@@ -170,7 +170,8 @@ CREATE TABLE users(
   phoneNumber VARCHAR(25) NOT NULL,
   roleId INTEGER NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (roleId) REFERENCES roles(id)
+  FOREIGN KEY (roleId) REFERENCES roles(id),
+  UNIQUE (email)
 ) ENGINE=INNODB;
 
 /*Stores*/

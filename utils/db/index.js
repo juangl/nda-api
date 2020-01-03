@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('db');
 
-function dbClient() {
+function db() {
   const connection = mysql
     .createConnection({
       host: process.env.DB_HOST,
@@ -355,4 +355,4 @@ function dbClient() {
   };
 }
 
-module.exports = dbClient();
+module.exports = db();
