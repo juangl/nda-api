@@ -19,9 +19,15 @@ const storeModel = {
   },
 };
 
+const likedItemModel = {
+  type: 'string',
+  id: 'number',
+};
+
 const types = {
   user: userModel,
   store: storeModel,
+  likedItem: likedItemModel,
 };
 
 module.exports = function(type, data, required, post) {

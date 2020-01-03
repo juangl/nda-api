@@ -10,6 +10,27 @@ router.get('/', authorize, grantAccess, async (req, res) => {
   respond(await dbClient.likedItems.getLiked(userId), res);
 });
 
+router.post('/', authorize, grantAccess, async (req, res) => {
+  const userId = req.locals.user.id;
+  const entityType = req.body.type;
+  debug(
+    `User with id ${userId} is adding a new ${entityType} to its liked items`,
+  );
+  const newLikedItem = sanitizer('likedItem', req.body, true);
+  newLikedItem.userId = userId;
+  respond(await dbClient.likedItems.likeItem(newLikedItem), res, error => {
+    if (error) {
+      debug(
+        `User with id ${userId} has failed by adding a new item to its liked items`,
+      );
+    } else {
+      debug(
+        `User with id ${userId} has liked a ${entityType} with id ${req.body.id}`,
+      );
+    }
+  });
+});
+
 // router.get('/:id', authorize, grantAccess, async (req, res) => {
 //   const storeId = req.params.id;
 //   respond(
@@ -23,20 +44,6 @@ router.get('/', authorize, grantAccess, async (req, res) => {
 //       }
 //     },
 //   );
-// });
-
-// router.post('/', authorize, grantAccess, async (req, res) => {
-//   const ownerId = req.locals.user.id;
-//   debug(`User with id ${ownerId} is creating a new store`);
-//   let newStore = sanitizer('store', req.body, true, true);
-//   newStore.ownerId = ownerId;
-//   respond(await dbClient.store.createStore(newStore), res, error => {
-//     if (error) {
-//       debug(`User with id ${ownerId} has failed by creating a new store`);
-//     } else {
-//       debug(`User with id ${ownerId} has created a new store`);
-//     }
-//   });
 // });
 
 // router.patch('/:id', authorize, grantAccess, async (req, res) => {

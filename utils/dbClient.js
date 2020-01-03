@@ -321,6 +321,20 @@ function dbClient() {
 
         return response;
       },
+      async likeItem({ userId, type, id }) {
+        return await query(`
+          INSERT INTO likedItems(
+            userId,
+            entityType,
+            entityId
+          )
+          VALUES(
+            ${userId},
+            "${type}",
+            ${id}
+          );
+        `);
+      },
     },
     async patch(tableName, resourceId, sanitized) {
       let queriedFields = '';
