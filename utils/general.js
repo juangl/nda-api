@@ -1,5 +1,5 @@
 module.exports = {
-  respond(result, res, callback) {
+  respond(result, res, callback = () => {}) {
     switch (true) {
       case result instanceof Error:
         res.json({
