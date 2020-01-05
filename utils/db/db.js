@@ -8,24 +8,18 @@ const connection = mysql.createConnection({
 
 function query(query) {
   return new Promise((resolve, reject) =>
-    connection.query(query, (err, results, fields) => {
+    connection.query(query, (err, results) => {
       if (err) return reject(err);
-      resolve({
-        results,
-        fields,
-      });
+      resolve(results);
     }),
   );
 }
 
 function execute(query, data) {
   return new Promise((resolve, reject) =>
-    connection.execute(query, data, (err, results, fields) => {
+    connection.execute(query, data, (err, results) => {
       if (err) return reject(err);
-      resolve({
-        results,
-        fields,
-      });
+      resolve(results);
     }),
   );
 }
