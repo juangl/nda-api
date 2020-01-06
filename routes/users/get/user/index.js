@@ -1,9 +1,16 @@
 const { compose } = require('compose-middleware');
-const { db } = require('../../../../utils');
 const { authorize } = require('../../../../middlewares');
+const {
+  db,
+  general: { respond },
+} = require('../../../../utils');
 
 const handler = async (req, res) => {
-  res.json(await db.namespaces.users.getUser(req.locals.user.id));
+  try {
+    respond(await db.namespaces.users.getUser(req.locals.user.id), res);
+  } catch (e) {
+    respond(e, res);
+  }
 };
 
 module.exports = compose([authorize, handler]);

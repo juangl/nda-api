@@ -3,10 +3,10 @@ const ratings = require('./subQueries/ratings');
 module.exports = db => async category => {
   let baseQuery = `SELECT * FROM stores`;
   if (category) {
-    const result = await db.query(
+    const results = await db.query(
       `SELECT id FROM categories WHERE category = "${category}"`,
     );
-    if (result.length) baseQuery += ` WHERE categoryId = ${result[0].id}`;
+    if (results.length) baseQuery += ` WHERE categoryId = ${results[0].id}`;
   }
 
   const finalQuery = `

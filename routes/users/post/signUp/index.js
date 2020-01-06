@@ -15,14 +15,11 @@ module.exports = async (req, res) => {
     user.roleId = await db.namespaces.users.getRoleId(type);
     const response = await db.namespaces.users.register(user);
     if (!response) {
-      return res.json({
-        success: false,
-        payload: {
-          message: 'Something went wrong while your registration',
-        },
+      respond(response, res, () => {
+        debug(`Failed while registrating the user with email ${user.email}`);
       });
     }
-    res.json(await db.namespaces.users.login(user.email, user._password));
+    respond(await db.namespaces.users.login(user.email, user._password), res);
   } catch (e) {
     respond(e, res);
   }

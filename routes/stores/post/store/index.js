@@ -17,17 +17,21 @@ const sanitizer = createSanitizer(shapes.store, {
 });
 
 const handler = async (req, res) => {
-  const ownerId = req.locals.user.id;
-  debug(`User with id ${ownerId} is creating a new store`);
-  const newStore = req.body;
-  newStore.ownerId = ownerId;
-  respond(await db.namespaces.stores.createStore(newStore), res, error => {
-    if (error) {
-      debug(`User with id ${ownerId} has failed by creating a new store`);
-    } else {
-      debug(`User with id ${ownerId} has created a new store`);
-    }
-  });
+  try {
+    const ownerId = req.locals.user.id;
+    debug(`User with id ${ownerId} is creating a new store`);
+    const newStore = req.body;
+    newStore.ownerId = ownerId;
+    respond(await db.namespaces.stores.createStore(newStore), res, error => {
+      if (error) {
+        debug(`User with id ${ownerId} has failed by creating a new store`);
+      } else {
+        debug(`User with id ${ownerId} has created a new store`);
+      }
+    });
+  } catch (e) {
+    respond(e, res);
+  }
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);

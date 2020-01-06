@@ -1,11 +1,11 @@
-const express = require('express');
-const expressValidator = require('express-validator');
-const bodyParser = require('body-parser');
 const path = require('path');
 const dotenv = require('dotenv');
-dotenv.config();
+const express = require('express');
 const debug = require('debug')('server');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 const config = require('./config');
+dotenv.config();
 
 //Express app initialization
 var app = express();
