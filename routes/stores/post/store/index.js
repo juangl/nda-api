@@ -21,7 +21,7 @@ const handler = async (req, res) => {
   debug(`User with id ${ownerId} is creating a new store`);
   const newStore = req.body;
   newStore.ownerId = ownerId;
-  respond(await db.store.createStore(newStore), res, error => {
+  respond(await db.namespaces.stores.createStore(newStore), res, error => {
     if (error) {
       debug(`User with id ${ownerId} has failed by creating a new store`);
     } else {

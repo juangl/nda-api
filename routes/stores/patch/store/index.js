@@ -1,24 +1,30 @@
 const debug = require('debug')('patchStore');
 const { compose } = require('compose-middleware');
-const { authorize, grantAccess } = require('../../../../middlewares');
+const {
+  authorize,
+  sanitizer: createSanitizer,
+  grantAccess,
+} = require('../../../../middlewares');
 const {
   db,
+  shapes,
   general: { respond },
 } = require('../../../../utils');
 
+const sanitizer = createSanitizer(shapes.store, { secured: true });
+
 const handler = async (req, res) => {
   const storeId = req.params.id;
-  const verification = await db.store.verifyProperty(
+  const verification = await db.namespaces.stores.verifyProperty(
     storeId,
     req.locals.user.id,
   ); //TODO: verify the property of the store.
-  const patch = sanitizer('store', req.body);
-  const fields = Object.keys(patch);
+  const fields = Object.keys(req.body);
   if (!fields.length) {
     res.status(422);
     return respond(new Error('invalid patch'), res);
   }
-  respond(await db.patch('stores', storeId, patch), res, error => {
+  respond(await db.utils.patch('stores', storeId, req.body), res, error => {
     if (error) {
       debug(`Store with id ${storeId} has failed by being patched`);
     } else {
@@ -27,4 +33,4 @@ const handler = async (req, res) => {
   });
 };
 
-module.exports = compose([authorize, grantAccess, handler]);
+module.exports = compose([authorize, grantAccess, sanitizer, handler]);

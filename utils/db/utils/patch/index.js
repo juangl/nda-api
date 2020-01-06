@@ -10,9 +10,7 @@ module.exports = db => async (tableName, resourceId, sanitized) => {
   }
   queriedFields = queriedFields.substring(0, queriedFields.length - 1);
   debug(`Patching ${tableName} with`, queriedFields);
-  return !!(
-    await db.query(
-      `UPDATE ${tableName} SET${queriedFields} WHERE id = ${resourceId}`,
-    )
-  ).affectedRows;
+  return await db.query(
+    `UPDATE ${tableName} SET${queriedFields} WHERE id = ${resourceId}`,
+  );
 };

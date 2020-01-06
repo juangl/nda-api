@@ -10,7 +10,7 @@ const {
   grantAccess,
   sanitizer: createSanitizer,
 } = require('../../../../middlewares');
-const sanitizer = createSanitizer(shapes.likeItems, true);
+const sanitizer = createSanitizer(shapes.likedItem, true);
 
 const handler = async (req, res) => {
   const userId = req.locals.user.id;
@@ -18,8 +18,8 @@ const handler = async (req, res) => {
   debug(
     `User with id ${userId} is adding a new ${entityType} to its liked items`,
   );
-  newLikedItem.userId = userId;
-  respond(await db.likedItems.likeItem(newLikedItem), res, error => {
+  req.body.userId = userId;
+  respond(await db.namespaces.likedItems.likeItem(req.body), res, error => {
     if (error) {
       debug(
         `User with id ${userId} has failed by adding a new item to its liked items`,

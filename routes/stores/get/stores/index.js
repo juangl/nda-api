@@ -8,7 +8,7 @@ const {
 const handler = async (req, res) => {
   try {
     const category = req.query.category;
-    respond(await db.store.getStores(category), res);
+    respond(await db.namespaces.stores.getStores(category), res);
   } catch (e) {
     respond(e, res);
   }

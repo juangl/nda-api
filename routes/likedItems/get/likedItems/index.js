@@ -7,7 +7,7 @@ const {
 
 const handler = async (req, res) => {
   const userId = req.locals.user.id;
-  respond(await db.likedItems.getLiked(userId), res);
+  respond(await db.namespaces.likedItems.getLiked(userId), res);
 };
 
 module.exports = compose([authorize, grantAccess, handler]);

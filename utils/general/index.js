@@ -46,6 +46,9 @@ module.exports = {
         });
         callback(false);
         break;
+      default:
+        console.log(result);
+        break;
     }
   },
 };
