@@ -12,18 +12,22 @@ router = router(['stores']);
 
 router.get('/', authorize, grantAccess, async (req, res) => {
   const category = req.query.category;
-  respond(await db.store.getStores(category), res);
+  respond(await db.namespaces.stores.getStores(category), res);
 });
 
 router.get('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-  respond(await db.store.getStore(storeId, req.locals.user.id), res, error => {
-    if (error) {
-      debug(`Get store with id ${storeId} has failed`);
-    } else {
-      debug(`Get store with id ${storeId} has been successful`);
-    }
-  });
+  respond(
+    await db.namespaces.stores.getStore(storeId, req.locals.user.id),
+    res,
+    error => {
+      if (error) {
+        debug(`Get store with id ${storeId} has failed`);
+      } else {
+        debug(`Get store with id ${storeId} has been successful`);
+      }
+    },
+  );
 });
 
 const postStoreSanitizer = sanitizer(shapes.store, {
@@ -41,7 +45,7 @@ router.post(
     debug(`User with id ${ownerId} is creating a new store`);
     const newStore = req.body;
     newStore.ownerId = ownerId;
-    respond(await db.store.createStore(newStore), res, error => {
+    respond(await db.namespaces.stores.createStore(newStore), res, error => {
       if (error) {
         debug(`User with id ${ownerId} has failed by creating a new store`);
       } else {
@@ -53,7 +57,7 @@ router.post(
 
 router.patch('/:id', authorize, grantAccess, async (req, res) => {
   const storeId = req.params.id;
-  const verification = await db.store.verifyProperty(
+  const verification = await db.namespaces.stores.verifyProperty(
     storeId,
     req.locals.user.id,
   ); //TODO: verify the property of the store.

@@ -98,7 +98,7 @@ module.exports = db => async (storeId, userId) => {
         entityType = "product" AND
         entityId = ${userId}) b
     `)
-      )[0][0],
+      )[0],
     );
 
     products[each].ratedByUser = !!products[each].userRatings;

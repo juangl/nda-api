@@ -1,48 +1,35 @@
+const ratings = require('./subQueries/ratings');
+
 module.exports = db => async category => {
-  let categoryId;
   let baseQuery = `SELECT * FROM stores`;
   if (category) {
-    const result = (
-      await db.query(`SELECT id FROM categories WHERE category = "${category}"`)
-    )[0];
-    if (result.length) categoryId = result[0].id;
-  }
-
-  if (categoryId) {
-    baseQuery += ` WHERE categoryId = ${categoryId}`;
+    const result = await db.query(
+      `SELECT id FROM categories WHERE category = "${category}"`,
+    );
+    if (result.length) baseQuery += ` WHERE categoryId = ${result[0].id}`;
   }
 
   const finalQuery = `
-  SELECT *, a.id as id FROM
-    (${baseQuery}) a
-
-  LEFT JOIN
-
-    (SELECT
-      entityId,
-      AVG(stars) as rating,
-      COUNT(stars) as whoRated,
-      id
-    FROM ratings
-    WHERE
-      entityType = "store") b
-    ON a.id = b.entityId
+    SELECT *, base.id as id
+    FROM
+      (${baseQuery}) base
+    LEFT JOIN
+      (${ratings}) ratings
+    ON base.id = ratings.entityId
   `;
 
-  const stores = (await db.query(finalQuery))[0];
+  const stores = await db.query(finalQuery);
 
-  for (each in stores) {
-    stores[each].images = (
-      await db.query(`
+  stores.forEach(async store => {
+    store.images = await db.query(`
       SELECT
         url
       FROM images
       WHERE
         entityType = "store" AND
-        entityId = ${stores[each].id}
-    `)
-    )[0];
-  }
+        entityId = ${store.id}
+    `);
+  });
 
   return stores;
 };

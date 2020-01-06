@@ -7,7 +7,7 @@ module.exports = db => async (email, password) => {
       await db.query(
         `SELECT id as userId, password FROM users WHERE email="${email}"`,
       )
-    )[0][0];
+    )[0];
     if (await bcrypt.compare(password, user.password)) {
       return {
         success: true,

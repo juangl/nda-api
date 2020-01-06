@@ -7,6 +7,6 @@ module.exports = db => async userId => {
   LEFT JOIN roles b ON
   a.roleId=b.id
 `)
-  )[0][0];
+  )[0];
   return mainUser;
 };

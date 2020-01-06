@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('authorize');
-const { respond, db } = require('../../utils');
+const {
+  general: { respond },
+  db,
+} = require('../../utils');
 
 module.exports = async (req, res, next) => {
   req.locals.user = {};
@@ -12,7 +15,9 @@ module.exports = async (req, res, next) => {
       res.status(200);
       const userId = jwt.verify(token, process.env.JWT_SECRET_KEY).userId;
       req.locals.user.id = userId;
-      req.locals.user.permissions = await db.user.getPermissions(userId);
+      req.locals.user.permissions = await db.namespaces.users.getPermissions(
+        userId,
+      );
       debug(
         `[authorize] User with id ${req.locals.user.id} was successfuly authorized`,
       );

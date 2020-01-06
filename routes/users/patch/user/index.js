@@ -18,7 +18,7 @@ const handler = async (req, res) => {
         message: 'invalid patch',
       },
     });
-  const patching = await db.patch('users', req.locals.user.id, patch);
+  const patching = await db.utils.patch('users', req.locals.user.id, patch);
   if (!patching) {
     debug('Error while patching the user');
     return res.json({

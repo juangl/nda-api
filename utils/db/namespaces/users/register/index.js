@@ -5,8 +5,8 @@ module.exports = db => async ({
   lastName,
   phoneNumber,
   roleId,
-}) => {
-  return await db.query(`
+}) =>
+  await db.query(`
     INSERT INTO users(
       email,
       password,
@@ -23,4 +23,3 @@ module.exports = db => async ({
       "${phoneNumber}",
       ${roleId});
   `);
-};

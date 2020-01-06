@@ -14,5 +14,5 @@ module.exports = db => async (tableName, resourceId, sanitized) => {
     await db.query(
       `UPDATE ${tableName} SET${queriedFields} WHERE id = ${resourceId}`,
     )
-  )[0].affectedRows;
+  ).affectedRows;
 };

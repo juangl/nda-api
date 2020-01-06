@@ -11,7 +11,7 @@ router = router(['liked_stores', 'liked_products']);
 
 router.get('/', authorize, grantAccess, async (req, res) => {
   const userId = req.locals.user.id;
-  respond(await db.likedItems.getLiked(userId), res);
+  respond(await db.namespaces.likedItems.getLiked(userId), res);
 });
 
 router.post('/', authorize, grantAccess, async (req, res) => {
@@ -22,7 +22,7 @@ router.post('/', authorize, grantAccess, async (req, res) => {
   );
   const newLikedItem = sanitizer('likedItem', req.body, true);
   newLikedItem.userId = userId;
-  respond(await db.likedItems.likeItem(newLikedItem), res, error => {
+  respond(await db.namespaces.likedItems.likeItem(newLikedItem), res, error => {
     if (error) {
       debug(
         `User with id ${userId} has failed by adding a new item to its liked items`,
@@ -38,7 +38,7 @@ router.post('/', authorize, grantAccess, async (req, res) => {
 // router.get('/:id', authorize, grantAccess, async (req, res) => {
 //   const storeId = req.params.id;
 //   respond(
-//     await db.store.getStore(storeId, req.locals.user.id),
+//     await db.namespaces.stores.getStore(storeId, req.locals.user.id),
 //     res,
 //     error => {
 //       if (error) {
@@ -52,7 +52,7 @@ router.post('/', authorize, grantAccess, async (req, res) => {
 
 // router.patch('/:id', authorize, grantAccess, async (req, res) => {
 //   const storeId = req.params.id;
-//   const verification = await db.store.verifyProperty(
+//   const verification = await db.namespaces.stores.verifyProperty(
 //     storeId,
 //     req.locals.user.id,
 //   ); //TODO: verify the property of the store.

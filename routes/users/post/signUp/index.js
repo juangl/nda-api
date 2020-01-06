@@ -12,8 +12,8 @@ module.exports = async (req, res) => {
     let user = req.body;
     user._password = user.password;
     user.password = await bcrypt.hash(user.password, 10);
-    user.roleId = await db.user.getRoleId(type);
-    const response = await db.user.register(user);
+    user.roleId = await db.namespaces.users.getRoleId(type);
+    const response = await db.namespaces.users.register(user);
     if (!response) {
       return res.json({
         success: false,
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
         },
       });
     }
-    res.json(await db.user.login(user.email, user._password));
+    res.json(await db.namespaces.users.login(user.email, user._password));
   } catch (e) {
     respond(e, res);
   }
