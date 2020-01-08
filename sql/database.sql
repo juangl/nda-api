@@ -1,4 +1,5 @@
 DROP DATABASE IF EXISTS domi_app;
+
 CREATE DATABASE domi_app;
 
 USE domi_app;
@@ -10,13 +11,13 @@ CREATE TABLE roles(
   id INTEGER NOT NULL AUTO_INCREMENT,
   name VARCHAR(10) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 CREATE TABLE permissions(
   id INTEGER NOT NULL AUTO_INCREMENT,
   permission VARCHAR(25) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 CREATE TABLE rolesPermissions(
   id INTEGER NOT NULL AUTO_INCREMENT,
@@ -25,85 +26,85 @@ CREATE TABLE rolesPermissions(
   PRIMARY KEY (id),
   FOREIGN KEY (roleId) REFERENCES roles(id),
   FOREIGN KEY (permissionId) REFERENCES permissions(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
-  /*DEFAULT DUMPS*/
-INSERT INTO roles
-  (id, name)
+/*DEFAULT DUMPS*/
+INSERT INTO
+  roles (id, name)
 VALUES
   (1, 'client'),
   (2, 'admin'),
   (3, 'partner');
 
-INSERT INTO permissions
-  (id, permission)
+INSERT INTO
+  permissions (id, permission)
 VALUES
-/*orders*/
+  /*orders*/
   (1, 'create_orders'),
   (2, 'read_orders'),
   (3, 'update_orders'),
   (4, 'delete_orders'),
-/*stores*/
+  /*stores*/
   (5, 'create_stores'),
   (6, 'read_stores'),
   (7, 'update_stores'),
   (8, 'delete_stores'),
-/*product images*/
+  /*product images*/
   (9, 'create_product_images'),
   (10, 'read_product_images'),
   (11, 'update_product_images'),
   (12, 'delete_product_images'),
-/*product ratings*/
+  /*product ratings*/
   (13, 'create_product_ratings'),
   (14, 'read_product_ratings'),
   (15, 'update_product_ratings'),
   (16, 'delete_product_ratings'),
-/*store images*/
+  /*store images*/
   (17, 'create_store_images'),
   (18, 'read_store_images'),
   (19, 'update_store_images'),
   (20, 'delete_store_images'),
-/*store ratings*/
+  /*store ratings*/
   (21, 'create_store_ratings'),
   (22, 'read_store_ratings'),
   (23, 'update_store_ratings'),
   (24, 'delete_store_ratings'),
-/*liked products*/
+  /*liked products*/
   (25, 'create_liked_products'),
   (26, 'read_liked_products'),
   (27, 'update_liked_products'),
   (28, 'delete_liked_products'),
-/*liked stores*/
+  /*liked stores*/
   (29, 'create_liked_stores'),
   (30, 'read_liked_stores'),
   (31, 'update_liked_stores'),
   (32, 'delete_liked_stores');
 
-INSERT INTO rolesPermissions
-  (roleId, permissionId)
+INSERT INTO
+  rolesPermissions (roleId, permissionId)
 VALUES
-/*
-  client permissions
-    +create_orders
-    +read_orders
-    +read_stores
-    +read_product_images
-    +create_product_ratings
-    +read_product_ratings
-    +update_product_ratings
-    +read_store_images
-    +create_store_ratings
-    +read_store_ratings
-    +update_store_ratings
-    +create_liked_products
-    +read_liked_products
-    +update_liked_products
-    +delete_liked_products
-    +create_liked_stores
-    +read_liked_stores
-    +update_liked_stores
-    +delete_liked_stores
-*/
+  /*
+   client permissions
+   +create_orders
+   +read_orders
+   +read_stores
+   +read_product_images
+   +create_product_ratings
+   +read_product_ratings
+   +update_product_ratings
+   +read_store_images
+   +create_store_ratings
+   +read_store_ratings
+   +update_store_ratings
+   +create_liked_products
+   +read_liked_products
+   +update_liked_products
+   +delete_liked_products
+   +create_liked_stores
+   +read_liked_stores
+   +update_liked_stores
+   +delete_liked_stores
+   */
   (1, 1),
   (1, 2),
   (1, 6),
@@ -123,29 +124,29 @@ VALUES
   (1, 30),
   (1, 31),
   (1, 32),
-/*
-  admin permissions
-    +create_stores
-    +read_stores
-*/
+  /*
+   admin permissions
+   +create_stores
+   +read_stores
+   */
   (2, 5),
   (2, 6),
-/*
-  partner permissions
-    +read_orders
-    +update_orders
-    +delete_orders
-    +create_product_images
-    +read_product_images
-    +update_product_images
-    +delete_product_images
-    +read_product_ratings
-    +create_store_images
-    +read_store_images
-    +update_store_images
-    +delete_store_images
-    +read_store_ratings
-*/
+  /*
+   partner permissions
+   +read_orders
+   +update_orders
+   +delete_orders
+   +create_product_images
+   +read_product_images
+   +update_product_images
+   +delete_product_images
+   +read_product_ratings
+   +create_store_images
+   +read_store_images
+   +update_store_images
+   +delete_store_images
+   +read_store_ratings
+   */
   (3, 2),
   (3, 3),
   (3, 4),
@@ -172,7 +173,7 @@ CREATE TABLE users(
   PRIMARY KEY (id),
   FOREIGN KEY (roleId) REFERENCES roles(id),
   UNIQUE (email)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Stores*/
 CREATE TABLE stores(
@@ -185,19 +186,22 @@ CREATE TABLE stores(
   serviceStatus BOOLEAN NOT NULL DEFAULT true,
   PRIMARY KEY (id),
   FOREIGN KEY (ownerId) REFERENCES users(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Ratings*/
 CREATE TABLE ratings(
   id INTEGER NOT NULL AUTO_INCREMENT,
   entityType ENUM('store', 'product') NOT NULL,
-  entityId  INTEGER NOT NULL,
+  entityId INTEGER NOT NULL,
   userId INTEGER NOT NULL,
   stars INTEGER NOT NULL,
-  CHECK (stars >= 1 AND stars <= 5),
+  CHECK (
+    stars >= 1
+    AND stars <= 5
+  ),
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES users(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Orders*/
 CREATE TABLE orders(
@@ -211,7 +215,7 @@ CREATE TABLE orders(
   deliveredAt TIMESTAMP,
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES users(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Products*/
 CREATE TABLE products(
@@ -220,9 +224,11 @@ CREATE TABLE products(
   name VARCHAR(255) NOT NULL,
   availability BOOLEAN NOT NULL DEFAULT true,
   maxQuantity INTEGER NOT NULL DEFAULT 5,
+  price DECIMAL(6, 2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
   PRIMARY KEY (id),
   FOREIGN KEY (storeId) REFERENCES stores(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Orders Products*/
 CREATE TABLE ordersProducts(
@@ -234,31 +240,31 @@ CREATE TABLE ordersProducts(
   PRIMARY KEY (id),
   FOREIGN KEY (orderId) REFERENCES orders(id),
   FOREIGN KEY (productId) REFERENCES products(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 /*Images*/
 CREATE TABLE images(
   id INTEGER NOT NULL AUTO_INCREMENT,
   entityType VARCHAR(7) NOT NULL,
-  entityId  INTEGER NOT NULL,
+  entityId INTEGER NOT NULL,
   url TEXT NOT NULL,
   CHECK (entityType IN ('store', 'product')),
   PRIMARY KEY (id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 CREATE TABLE settings(
   id INTEGER NOT NULL AUTO_INCREMENT,
   configuration VARCHAR(50) NOT NULL,
   value VARCHAR(50),
   PRIMARY KEY (id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 CREATE TABLE allowedLocations(
   id INTEGER NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL,
   areaCoordinates TEXT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 CREATE TABLE likedItems(
   id INTEGER NOT NULL AUTO_INCREMENT,
@@ -267,6 +273,6 @@ CREATE TABLE likedItems(
   entityId INTEGER NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES users(id)
-) ENGINE=INNODB;
+) ENGINE = INNODB;
 
 COMMIT;
