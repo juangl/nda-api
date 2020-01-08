@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const express = require('express');
 const debug = require('debug')('server');
 const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
 const config = require('./config');
 dotenv.config();
 

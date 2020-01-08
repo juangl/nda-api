@@ -1,4 +1,5 @@
-const ratings = require('./subQueries/ratings');
+const queries = require('../../../utils/queries');
+const { deleteProperties } = require('../../../../general');
 
 module.exports = db => async category => {
   let baseQuery = `SELECT * FROM stores`;
@@ -14,22 +15,19 @@ module.exports = db => async category => {
     FROM
       (${baseQuery}) base
     LEFT JOIN
-      (${ratings}) ratings
+      (${queries.ratings('store')}) ratings
     ON base.id = ratings.entityId
   `;
 
   const stores = await db.query(finalQuery);
 
-  stores.forEach(async store => {
-    store.images = await db.query(`
-      SELECT
-        url
-      FROM images
-      WHERE
-        entityType = "store" AND
-        entityId = ${store.id}
-    `);
-  });
+  for (let i = 0; i < stores.length; i++) {
+    const currentStore = stores[i];
+    currentStore.images = await db.query(
+      queries.images('store', currentStore.id),
+    );
+    deleteProperties(currentStore, ['ownerId', 'entityId']);
+  }
 
   return stores;
 };

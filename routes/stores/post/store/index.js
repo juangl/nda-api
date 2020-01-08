@@ -19,10 +19,9 @@ const sanitizer = createSanitizer(shapes.store, {
 const handler = async (req, res) => {
   try {
     const ownerId = req.locals.user.id;
-    debug(`User with id ${ownerId} is creating a new store`);
-    const newStore = req.body;
-    newStore.ownerId = ownerId;
-    respond(await db.namespaces.stores.createStore(newStore), res, error => {
+    debug(`A new store is being made for the user with id ${ownerId}`);
+    req.body.ownerId = ownerId;
+    respond(await db.namespaces.stores.createStore(req.body), res, error => {
       if (error) {
         debug(`User with id ${ownerId} has failed by creating a new store`);
       } else {

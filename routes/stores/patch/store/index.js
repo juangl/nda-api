@@ -16,14 +16,17 @@ const sanitizer = createSanitizer(shapes.store, { secured: true });
 const handler = async (req, res) => {
   try {
     const storeId = req.params.id;
-    const verification = await db.namespaces.stores.verifyProperty(
-      storeId,
-      req.locals.user.id,
-    ); //TODO: verify the property of the store.
-    const fields = Object.keys(req.body);
-    if (!fields.length) {
+    if (
+      !(await db.namespaces.stores.verifyProperty(storeId, req.locals.user.id))
+    ) {
+      respond(
+        new Error(`You can't edit a store which is not of your own`),
+        res,
+      );
+    }
+    if (!Object.keys(req.body).length) {
       res.status(422);
-      return respond(new Error('invalid patch'), res);
+      return respond(new Error('Invalid patch'), res);
     }
     respond(await db.utils.patch('stores', storeId, req.body), res, error => {
       if (error) {

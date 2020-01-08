@@ -6,7 +6,7 @@ const {
 
 module.exports = async (req, res) => {
   try {
-    debug('An user is signing in');
+    debug(`User with email ${user.email} is signing in`);
     const user = req.body;
     respond(
       await db.namespaces.users.login(user.email, user.password),

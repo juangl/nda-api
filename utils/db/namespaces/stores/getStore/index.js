@@ -1,113 +1,68 @@
+const queries = require('../../../utils/queries');
+const { deleteProperties } = require('../../../../general');
+
 module.exports = db => async (storeId, userId) => {
-  const ratings = `
-  SELECT
-    AVG(stars) as avg,
-    COUNT(stars) as count
-  FROM ratings
-  WHERE
-    entityType = "store" AND
-    entityId = "${storeId}"`;
-
-  const userRatings = `
-  SELECT
-    COUNT(*) as userRatings
-  FROM ratings
-  WHERE
-    entityType = "store" AND
-    entityId = ${storeId} AND
-    userId = ${userId}
-  `;
-
-  let result = (
-    await db.query(`
-  SELECT * FROM 
-  (SELECT * FROM stores WHERE id = ${storeId}) stores
-  JOIN
-  (SELECT
-    ratings.avg as rating,
-    ratings.count as whoRated,
-    userRatings.userRatings
-  FROM
-    (${ratings}) ratings
-    JOIN
-    (${userRatings}) userRatings
-  ) ratingsStuff
-  `)
-  )[0];
+  let result = await db.query(`
+    SELECT
+      *
+    FROM 
+      stores s
+    LEFT JOIN
+      (${queries.ratings('store')}) storeRatings
+    ON
+      s.id = storeRatings.entityId
+    LEFT JOIN
+      (${queries.userRatings('store')}) userStoreRatings
+    ON
+      s.id = userStoreRatings.entityId AND
+      userStoreRatings.userId = ${userId}
+    WHERE
+      s.id = ${storeId}
+  `);
   if (!result.length) {
-    // Send an error
-    return result;
+    return result; // NOTE: respond utility handles empty arrays as errors
   }
   result = result[0];
 
-  const images = (
-    await db.query(`
-  SELECT
-    url
-  FROM images
-  WHERE
-    entityType = "store" AND
-    entityId = ${storeId}
-  `)
-  )[0].map(({ url }) => url);
+  const images = (await db.query(queries.images('store', storeId))).map(
+    ({ url }) => url,
+  );
 
-  let products = (
-    await db.query(`
-  SELECT
-    id,
-    name,
-    availability,
-    maxQuantity
-  FROM products
-  WHERE
-    storeId = ${storeId}
-  `)
-  )[0];
-
-  for (each in products) {
-    products[each].images = (
-      await db.query(`
+  let products = await db.query(`
       SELECT
-        url
-      FROM images
+        *
+      FROM
+        products p
+      LEFT JOIN
+        (${queries.ratings('product')}) productRatings
+      ON
+        p.id = productRatings.entityId
+      LEFT JOIN
+        (${queries.userRatings('product')}) userProductRatings
+      ON
+        p.id = userProductRatings.entityId AND
+        userProductRatings.userId = ${userId}
       WHERE
-        entityType = "product" AND
-        entityId = ${products[each].id}
-    `)
-    )[0];
+        p.storeId = ${storeId};
+  `);
 
-    Object.assign(
-      products[each],
-      (
-        await db.query(`
-    SELECT * FROM
-      (SELECT
-        AVG(stars) as rating,
-        COUNT(stars) as whoRated
-      FROM ratings
-      WHERE
-        entityType = "product" AND
-        entityId = ${products[each].id}) a
-      
-      JOIN
-
-      (SELECT
-        COUNT(*) as userRatings
-      FROM ratings
-      WHERE
-        entityType = "product" AND
-        entityId = ${userId}) b
-    `)
-      )[0],
+  for (let i = 0; i < products.length; i++) {
+    const currentProduct = products[i];
+    currentProduct.images = await db.query(
+      queries.images('product', currentProduct.id),
     );
-
-    products[each].ratedByUser = !!products[each].userRatings;
-    delete products[each].userRatings;
+    currentProduct.ratedByUser = !!currentProduct.userRatings;
+    deleteProperties(currentProduct, [
+      'userId',
+      'storeId',
+      'entityId',
+      'userRatings',
+    ]);
   }
 
   result.images = images;
   result.products = products;
   result.ratedByUser = !!result.userRatings;
-  delete result.userRatings;
+  deleteProperties(result, ['entityId', 'userId', 'userRatings']);
   return result;
 };
