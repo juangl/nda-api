@@ -78,7 +78,12 @@ VALUES
   (29, 'create_liked_stores'),
   (30, 'read_liked_stores'),
   (31, 'update_liked_stores'),
-  (32, 'delete_liked_stores');
+  (32, 'delete_liked_stores'),
+  /*products*/
+  (33, 'create_products'),
+  (34, 'read_products'),
+  (35, 'update_products'),
+  (36, 'delete_products');
 
 INSERT INTO
   rolesPermissions (roleId, permissionId)
@@ -146,6 +151,10 @@ VALUES
    +update_store_images
    +delete_store_images
    +read_store_ratings
+   +create_products
+   +read_products
+   +update_products
+   +delete_products
    */
   (3, 2),
   (3, 3),
@@ -159,7 +168,11 @@ VALUES
   (3, 18),
   (3, 19),
   (3, 20),
-  (3, 22);
+  (3, 22),
+  (3, 33),
+  (3, 34),
+  (3, 35),
+  (3, 36);
 
 /*Users*/
 CREATE TABLE users(
