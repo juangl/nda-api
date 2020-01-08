@@ -12,10 +12,10 @@ module.exports = (
   };
   switch (true) {
     case result instanceof Error:
-      (response.success = false),
-        (response.payload = {
-          message: result.message,
-        });
+      response.success = false;
+      response.payload = {
+        message: result.message,
+      };
       break;
     case result.__proto__.constructor.name === 'ResultSetHeader':
       response.success = !!result.affectedRows;
@@ -26,8 +26,6 @@ module.exports = (
         };
       break;
     case Array.isArray(result):
-      response.payload = result;
-      break;
     case typeof result === 'object':
       response.payload = result;
       break;

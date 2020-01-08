@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     user._password = user.password;
     user.password = await bcrypt.hash(user.password, 10);
     user.roleId = await db.namespaces.users.getRoleId(type);
-    if (validateInsertion(await db.namespaces.users.register(user))) {
+    if (!validateInsertion(await db.namespaces.users.register(user))) {
       respond(
         new Error(`There was an error while trying to register you`),
         res,
@@ -22,8 +22,9 @@ module.exports = async (req, res) => {
             `There was an error while trying to register the client with email ${user.email}`,
           ),
       );
+    } else {
+      respond(await db.namespaces.users.login(user.email, user._password), res);
     }
-    respond(await db.namespaces.users.login(user.email, user._password), res);
   } catch (e) {
     respond(e, res);
   }
