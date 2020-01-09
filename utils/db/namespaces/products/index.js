@@ -1,3 +1,1 @@
-module.exports = db => ({
-  createProduct: require('./createProduct')(db),
-});
+module.exports = db => ({});

@@ -20,7 +20,7 @@ const handler = async (req, res) => {
       `User with id ${userId} is adding a new ${entityType} to its liked items`,
     );
     req.body.userId = userId;
-    respond(await db.namespaces.likedItems.likeItem(req.body), res, error => {
+    respond(await db.utils.insert('likedItems', req.body), res, error => {
       if (error) {
         debug(
           `User with id ${userId} has failed by adding a new item to its liked items`,

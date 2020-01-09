@@ -1,4 +1,4 @@
 module.exports = {
-  type: 'string',
-  id: 'number',
+  entityId: 'number',
+  entityType: 'string',
 };
