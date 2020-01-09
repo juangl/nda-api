@@ -17,7 +17,7 @@ const prepareSetPermissions = (req, res, next) => {
   setPermissions(req.params.entityType)(req, res, next);
 };
 
-const handler = (req, res) => {
+const handler = async (req, res) => {
   try {
     const entityId = req.params.entityId;
     const entityType = req.params.entityType;
@@ -25,9 +25,7 @@ const handler = (req, res) => {
     // respond(result, res, err => {
     //   console.log(err);
     // });
-  } catch (e) {
-
-  }
+  } catch (e) {}
 };
 
 module.exports = compose([
