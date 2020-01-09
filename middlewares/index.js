@@ -3,4 +3,5 @@ module.exports = {
   authorize: require('./authorize'),
   grantAccess: require('./grantAccess'),
   persistParams: require('./persistParams'),
+  setPermissions: require('./setPermissions'),
 };

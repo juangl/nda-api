@@ -13,6 +13,7 @@
   "dependencies": {
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
+    "change-case": "^4.1.1",
     "compose-middleware": "^5.0.1",
     "debug": "^4.1.1",
     "dotenv": "^8.1.0",
