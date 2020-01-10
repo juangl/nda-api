@@ -9,6 +9,9 @@ module.exports = (req, res, next) => {
     case 'likedStores':
       realEntityType = 'likedItems';
       break;
+    default:
+      realEntityType = entityType;
+      break;
   }
   req.params.entityType = realEntityType;
   next();
