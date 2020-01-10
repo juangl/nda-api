@@ -13,9 +13,5 @@ router.patch('/', patch.user);
 router.post('/signup', post.signUp);
 // Signin
 router.post('/signin', post.signIn);
-// Delete user
-router.delete('/', (req, res) => {
-  //TODO: Build delete account endpoint
-});
 
 module.exports = router;
