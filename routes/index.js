@@ -11,9 +11,10 @@ router.get('/', (req, res) => {
   });
 });
 
+router.delete('/:entityType/:entityId', del);
+
 router.use('/users', users);
 router.use('/stores', stores);
 router.use('/liked_items', likedItems);
-router.delete('/:entityType/:entityId', del);
 
 module.exports = router;

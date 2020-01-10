@@ -4,4 +4,5 @@ module.exports = {
   grantAccess: require('./grantAccess'),
   persistParams: require('./persistParams'),
   setPermissions: require('./setPermissions'),
+  realEntityMapper: require('./realEntityMapper'),
 };
