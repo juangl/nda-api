@@ -5,4 +5,5 @@ module.exports = {
   persistParams: require('./persistParams'),
   setPermissions: require('./setPermissions'),
   realEntityMapper: require('./realEntityMapper'),
+  entityIdParamValidator: require('./entityIdParamValidator'),
 };
