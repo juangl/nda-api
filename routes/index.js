@@ -2,7 +2,7 @@ const router = require('express').Router();
 const users = require('./users');
 const stores = require('./stores');
 const likedItems = require('./likedItems');
-const { delete: del } = require('./generic');
+const { delete: del, rate } = require('./generic');
 
 router.get('/', (req, res) => {
   res.json({
@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/:entityType/:entityId', del);
+router.post('/:entityType/:entityId/rate', rate);
 
 router.use('/users', users);
 router.use('/stores', stores);
