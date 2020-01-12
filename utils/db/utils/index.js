@@ -3,4 +3,5 @@ module.exports = db => ({
   queries: require('./queries'),
   delete: require('./delete')(db),
   insert: require('./insert')(db),
+  ensureExistance: require('./ensureExistance')(db),
 });
