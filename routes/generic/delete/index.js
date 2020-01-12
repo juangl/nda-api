@@ -11,6 +11,7 @@ const {
   grantAccess,
   setPermissions,
   realEntityMapper,
+  entityIdParamValidator,
 } = require('../../../middlewares');
 
 const prepareSetPermissions = (req, res, next) => {
@@ -32,6 +33,7 @@ const handler = async (req, res) => {
 };
 
 module.exports = compose([
+  entityIdParamValidator(),
   prepareSetPermissions,
   authorize,
   grantAccess,
