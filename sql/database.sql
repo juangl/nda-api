@@ -216,6 +216,16 @@ CREATE TABLE ratings(
   FOREIGN KEY (userId) REFERENCES users(id)
 ) ENGINE = INNODB;
 
+/*Invoices*/
+CREATE TABLE invoices(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  charge FLOAT(2) NOT NULL,
+  currency VARCHAR(3) NOT NULL,
+  isCharged BOOLEAN NOT NULL DEFAULT false,
+  paymentMethod VARCHAR(10) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE = INNODB;
+
 /*Orders*/
 CREATE TABLE orders(
   id INTEGER NOT NULL AUTO_INCREMENT,
@@ -226,8 +236,10 @@ CREATE TABLE orders(
   createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   finishedAt TIMESTAMP,
   deliveredAt TIMESTAMP,
+  invoiceId INTEGER NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (userId) REFERENCES users(id)
+  FOREIGN KEY (userId) REFERENCES users(id),
+  FOREIGN KEY (invoiceId) REFERENCES invoices(id)
 ) ENGINE = INNODB;
 
 /*Products*/
