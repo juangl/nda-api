@@ -227,13 +227,14 @@ CREATE TABLE invoices(
 ) ENGINE = INNODB;
 
 /**
+ * Orders
+ *
  * status 0 = disabled order, just to show the user
  * status 1 = accepted order
  * status 2 = prepared/finished order
  * status 3 = picked order
  * status 4 = delivered order
  */
-/*Orders*/
 CREATE TABLE orders(
   id INTEGER NOT NULL AUTO_INCREMENT,
   userId INTEGER NOT NULL,
@@ -257,7 +258,6 @@ CREATE TABLE products(
   availability BOOLEAN NOT NULL DEFAULT true,
   maxQuantity INTEGER NOT NULL DEFAULT 5,
   price DECIMAL(6, 2) NOT NULL,
-  currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
   PRIMARY KEY (id),
   FOREIGN KEY (storeId) REFERENCES stores(id)
 ) ENGINE = INNODB;
