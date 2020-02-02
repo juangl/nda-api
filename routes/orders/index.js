@@ -8,7 +8,7 @@ router = router(['orders']);
 router.post('/', post.order);
 // Get orders
 // router.get('/', get.orders);
-// // Get order info
-// router.get('/:id', get.order);
+// Get order info
+router.get('/:id', get.order);
 
 module.exports = router;
