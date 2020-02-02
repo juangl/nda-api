@@ -1,10 +1,6 @@
 const debug = require('debug')('patchUser');
 const { compose } = require('compose-middleware');
-const {
-  db,
-  shapes,
-  general: { respond },
-} = require('../../../../utils');
+const { db, shapes } = require('../../../../utils');
 const {
   authorize,
   sanitizer: createSanitizer,
@@ -18,17 +14,17 @@ const handler = async (req, res) => {
     const patch = req.body;
     const fields = Object.keys(patch);
     if (!fields.length)
-      return respond(new Error('Invalid patch'), res, () => {
+      return res.respond(new Error('Invalid patch'), () => {
         debug(
           `User with id ${userId} has failed by patching its profile because didn't respect the allowed shape`,
         );
       });
-    respond(await db.utils.patch('users', userId, patch), res, err => {
+    res.respond(await db.utils.patch('users', userId, patch), err => {
       if (err) return debug(`Error while pathing the user with id ${userId}`);
       debug(`The user with id ${userId} was patched successfuly`);
     });
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

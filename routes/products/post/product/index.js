@@ -1,10 +1,6 @@
 const debug = require('debug')('createProduct');
 const { compose } = require('compose-middleware');
-const {
-  db,
-  shapes,
-  general: { respond },
-} = require('../../../../utils');
+const { db, shapes } = require('../../../../utils');
 const {
   authorize,
   grantAccess,
@@ -17,7 +13,7 @@ const handler = async (req, res) => {
   const storeId = req.persistedParams.id; // NOTE: Set in persistParams middleware
   const newStore = req.body;
   newStore.storeId = storeId;
-  respond(await db.utils.insert('products', newStore), res);
+  res.respond(await db.utils.insert('products', newStore));
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);

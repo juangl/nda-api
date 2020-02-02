@@ -1,10 +1,6 @@
 const debug = require('debug')('postLikedItem');
 const { compose } = require('compose-middleware');
-const {
-  db,
-  shapes,
-  general: { respond },
-} = require('../../../../utils');
+const { db, shapes } = require('../../../../utils');
 const {
   authorize,
   grantAccess,
@@ -20,7 +16,7 @@ const handler = async (req, res) => {
       `User with id ${userId} is adding a new ${entityType} to its liked items`,
     );
     req.body.userId = userId;
-    respond(await db.utils.insert('likedItems', req.body), res, error => {
+    res.respond(await db.utils.insert('likedItems', req.body), error => {
       if (error) {
         debug(
           `User with id ${userId} has failed by adding a new item to its liked items`,
@@ -32,7 +28,7 @@ const handler = async (req, res) => {
       }
     });
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

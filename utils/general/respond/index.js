@@ -1,11 +1,10 @@
 const debug = require('debug')('responder');
 
-module.exports = (
+module.exports = function(
   result,
-  res,
   callback = err =>
     debug(`Gotten a${err ? 'n error' : 'success'} type response`),
-) => {
+) {
   const response = {
     success: true,
     payload: null,
@@ -34,6 +33,6 @@ module.exports = (
       console.error(new Error(response.payload, result));
       break;
   }
-  res.send(response);
+  this.send(response);
   callback(!response.success);
 };

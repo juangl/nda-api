@@ -4,7 +4,6 @@ const {
   db: {
     utils: { delete: del },
   },
-  general: { respond },
 } = require('../../../utils');
 const {
   authorize,
@@ -26,9 +25,9 @@ const handler = async (req, res) => {
     const entityId = req.params.entityId;
     const entityType = req.params.entityType;
     const result = await del(entityType, entityId);
-    respond(result, res);
+    res.respond(result);
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

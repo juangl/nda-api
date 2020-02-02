@@ -5,18 +5,22 @@ const debug = require('debug')('server');
 const bodyParser = require('body-parser');
 const config = require('./config');
 dotenv.config();
+const extensions = require('./middlewares/extensions');
 
-//Express app initialization
+// Express app initialization
 var app = express();
 app.set('port', process.env.PORT || 3000);
 
-//Serving public static files
+// Serving public static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Setting up bodyParser
+// Setting up bodyParser
 app.use(bodyParser.urlencoded(config.bodyParser));
 app.use(bodyParser.json(config.bodyParser));
 app.use(bodyParser.raw(config.bodyParser));
+
+// Adding middleware extensions
+app.use(extensions);
 
 app.use((req, res, next) => {
   req.locals = req.locals || {};

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const debug = require('debug')('signUp');
 const {
   db,
-  general: { respond, validateInsertion },
+  general: { validateInsertion },
 } = require('../../../../utils');
 
 module.exports = async (req, res) => {
@@ -15,11 +15,10 @@ module.exports = async (req, res) => {
     user.roleId = await db.namespaces.users.getRoleId(type);
     // if (validateInsertion(await db.namespaces.users.register(user))) {
     if (validateInsertion(await db.utils.insert('users', user))) {
-      respond(await db.namespaces.users.login(user.email, realPassword), res);
+      res.respond(await db.namespaces.users.login(user.email, realPassword));
     } else {
-      respond(
+      res.respond(
         new Error(`There was an error while trying to register you`),
-        res,
         () =>
           debug(
             `There was an error while trying to register the client with email ${user.email}`,
@@ -27,6 +26,6 @@ module.exports = async (req, res) => {
       );
     }
   } catch (e) {
-    respond(e, res);
+    respond(e);
   }
 };

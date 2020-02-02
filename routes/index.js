@@ -6,7 +6,7 @@ const orders = require('./orders');
 const { delete: del, rate } = require('./generic');
 
 router.get('/', (req, res) => {
-  res.json({
+  res.respond({
     greeting: 'Welcome to domi-app api!',
     version: '1.0',
   });

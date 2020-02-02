@@ -1,17 +1,13 @@
 const debug = require('debug')('getStore');
 const { compose } = require('compose-middleware');
 const { authorize, grantAccess } = require('../../../../middlewares');
-const {
-  db,
-  general: { respond },
-} = require('../../../../utils');
+const { db } = require('../../../../utils');
 
 const handler = async (req, res) => {
   try {
     const storeId = req.params.id;
-    respond(
+    res.respond(
       await db.namespaces.stores.getStore(storeId, req.locals.user.id),
-      res,
       error => {
         if (error) {
           debug(`Get store with id ${storeId} has failed`);
@@ -21,7 +17,7 @@ const handler = async (req, res) => {
       },
     );
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

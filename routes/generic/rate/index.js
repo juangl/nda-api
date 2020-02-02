@@ -5,10 +5,7 @@ const {
   setPermissions,
   entityIdParamValidator,
 } = require('../../../middlewares');
-const {
-  db,
-  general: { respond },
-} = require('../../../utils');
+const { db } = require('../../../utils');
 
 // NOTE: This is a repeated code
 const prepareSetPermissions = (req, res, next) => {
@@ -48,9 +45,9 @@ const handler = async (req, res, next) => {
       ))
     )
       throw new Error(`You already rated this ${entityType}`);
-    respond(await db.utils.insert('ratings', payload), res);
+    res.respond(await db.utils.insert('ratings', payload));
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

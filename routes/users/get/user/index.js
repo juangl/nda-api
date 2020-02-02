@@ -1,15 +1,12 @@
 const { compose } = require('compose-middleware');
 const { authorize } = require('../../../../middlewares');
-const {
-  db,
-  general: { respond },
-} = require('../../../../utils');
+const { db } = require('../../../../utils');
 
 const handler = async (req, res) => {
   try {
-    respond(await db.namespaces.users.getUser(req.locals.user.id), res);
+    res.respond(await db.namespaces.users.getUser(req.locals.user.id));
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 

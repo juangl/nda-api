@@ -1,10 +1,6 @@
 const debug = require('debug')('postStore');
 const { compose } = require('compose-middleware');
-const {
-  db,
-  shapes,
-  general: { respond },
-} = require('../../../../utils');
+const { db, shapes } = require('../../../../utils');
 const {
   authorize,
   grantAccess,
@@ -21,7 +17,7 @@ const handler = async (req, res) => {
     const ownerId = req.locals.user.id;
     debug(`A new store is being made for the user with id ${ownerId}`);
     req.body.ownerId = ownerId;
-    respond(await db.utils.insert('stores', req.body), res, error => {
+    res.respond(await db.utils.insert('stores', req.body), error => {
       if (error) {
         debug(`User with id ${ownerId} has failed by creating a new store`);
       } else {
@@ -29,7 +25,7 @@ const handler = async (req, res) => {
       }
     });
   } catch (e) {
-    respond(e, res);
+    res.respond(e);
   }
 };
 
