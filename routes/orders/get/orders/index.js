@@ -3,7 +3,11 @@ const { authorize, grantAccess } = require('../../../../middlewares');
 const { db } = require('../../../../utils');
 
 const handler = async (req, res) => {
-  res.respond(await db.namespaces.orders.getOrders(req.locals.user.id));
+  try {
+    res.respond(await db.namespaces.orders.getOrders(req.locals.user.id));
+  } catch (e) {
+    res.respond(e);
+  }
 };
 
 module.exports = compose([authorize, grantAccess, handler]);

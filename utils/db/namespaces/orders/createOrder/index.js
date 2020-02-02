@@ -3,6 +3,7 @@ const ensureInsertion = require('../../../utils/ensureInsertion');
 const servicePrice = 30; // TODO: Make this dynamically
 
 module.exports = db => async order => {
+  const getOrder = require('../getOrder')(db);
   let totalPrice = 0;
   const { products } = order;
   for (let i = 0; i < products.length; i++) {
@@ -61,7 +62,8 @@ module.exports = db => async order => {
     )
     .join(',');
 
-  return await db.query(`
+  ensureInsertion(
+    await db.query(`
     INSERT INTO
       ordersProducts(
         orderId,
@@ -71,5 +73,8 @@ module.exports = db => async order => {
       )
     VALUES
       ${orderProducts};
-  `);
+  `),
+  );
+
+  return await getOrder(orderId);
 };

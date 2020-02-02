@@ -37,9 +37,10 @@ module.exports = db => async (tableName, object, configuration = '1') => {
     } AND `;
   });
 
-  // Remove the ' AND ';
+  // Removes the ' AND ';
   whereQuery = whereQuery.substring(0, whereQuery.length - 5);
 
+  // TODO: Use COUNT(*) instead
   const results = await db.query(`
     SELECT * FROM
       ${tableName}

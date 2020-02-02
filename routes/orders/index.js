@@ -1,4 +1,5 @@
 const get = require('./get');
+const patch = require('./patch');
 const post = require('./post');
 let { router } = require('../../utils');
 
@@ -10,5 +11,7 @@ router.post('/', post.order);
 router.get('/', get.orders);
 // Get order info
 router.get('/:id', get.order);
+// Set order status
+router.patch('/:id/:orderStatus', patch.orderStatus);
 
 module.exports = router;

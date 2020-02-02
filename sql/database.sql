@@ -92,6 +92,7 @@ VALUES
    client permissions
    +create_orders
    +read_orders
+   +update_orders
    +read_stores
    +read_product_images
    +create_product_ratings
@@ -112,6 +113,7 @@ VALUES
    */
   (1, 1),
   (1, 2),
+  (1, 3),
   (1, 6),
   (1, 10),
   (1, 13),
@@ -131,9 +133,11 @@ VALUES
   (1, 32),
   /*
    admin permissions
+   +update_orders
    +create_stores
    +read_stores
    */
+  (1, 3),
   (2, 5),
   (2, 6),
   /*
