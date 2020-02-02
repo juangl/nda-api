@@ -7,7 +7,7 @@ router = router(['orders']);
 // Create order
 router.post('/', post.order);
 // Get orders
-// router.get('/', get.orders);
+router.get('/', get.orders);
 // Get order info
 router.get('/:id', get.order);
 
