@@ -220,19 +220,26 @@ CREATE TABLE ratings(
 CREATE TABLE invoices(
   id INTEGER NOT NULL AUTO_INCREMENT,
   charge FLOAT(2) NOT NULL,
-  currency VARCHAR(3) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
   isCharged BOOLEAN NOT NULL DEFAULT false,
-  paymentMethod VARCHAR(10) NOT NULL,
+  paymentMethod ENUM('cash', 'cc') NOT NULL DEFAULT 'cash',
   PRIMARY KEY (id)
 ) ENGINE = INNODB;
 
+/**
+ * status 0 = disabled order, just to show the user
+ * status 1 = accepted order
+ * status 2 = prepared/finished order
+ * status 3 = picked order
+ * status 4 = delivered order
+ */
 /*Orders*/
 CREATE TABLE orders(
   id INTEGER NOT NULL AUTO_INCREMENT,
   userId INTEGER NOT NULL,
   address VARCHAR(255) NOT NULL,
   coords VARCHAR(255) NOT NULL,
-  status INTEGER NOT NULL DEFAULT 1,
+  status INTEGER NOT NULL DEFAULT 0,
   createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   finishedAt TIMESTAMP,
   deliveredAt TIMESTAMP,

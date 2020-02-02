@@ -12,8 +12,12 @@ const {
 
 const sanitizer = createSanitizer(shapes.order);
 
-const handler = (req, res) => {
-  db.namespaces.orders.createrOrder;
+const handler = async (req, res) => {
+  const newOrder = {
+    ...req.body,
+    userId: req.locals.user.id,
+  };
+  respond(await db.namespaces.orders.createOrder(newOrder), res);
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);
