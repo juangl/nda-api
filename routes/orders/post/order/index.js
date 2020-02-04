@@ -9,15 +9,11 @@ const { db, shapes } = require('../../../../utils');
 const sanitizer = createSanitizer(shapes.order);
 
 const handler = async (req, res) => {
-  try {
-    const newOrder = {
-      ...req.body,
-      userId: req.locals.user.id,
-    };
-    res.respond(await db.namespaces.orders.createOrder(newOrder));
-  } catch (e) {
-    res.respond(e);
-  }
+  const newOrder = {
+    ...req.body,
+    userId: req.locals.user.id,
+  };
+  res.respond(await db.namespaces.orders.createOrder(newOrder));
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);
