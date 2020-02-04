@@ -2,23 +2,21 @@ const debug = require('debug')('patchStore');
 const { compose } = require('compose-middleware');
 const {
   authorize,
-  sanitizer: createSanitizer,
   grantAccess,
+  sanitizer: createSanitizer,
+  verifyProperty: createVerifyProperty,
 } = require('../../../../middlewares');
 const { db, shapes } = require('../../../../utils');
+
+const verifyProperty = createVerifyProperty();
 
 const sanitizer = createSanitizer(shapes.store, { secured: true });
 
 const handler = async (req, res) => {
   const storeId = req.params.id;
-  if (
-    !(await db.namespaces.stores.verifyProperty(storeId, req.locals.user.id))
-  ) {
-    res.respond(new Error(`You can't edit a store which is not of your own`));
-  }
   if (!Object.keys(req.body).length) {
     res.status(422);
-    return respond(new Error('Invalid patch'), res);
+    return res.respond(new Error('Invalid patch'), res);
   }
   res.respond(await db.utils.patch('stores', storeId, req.body), error => {
     if (error) {
@@ -29,4 +27,10 @@ const handler = async (req, res) => {
   });
 };
 
-module.exports = compose([authorize, grantAccess, sanitizer, handler]);
+module.exports = compose([
+  authorize,
+  grantAccess,
+  verifyProperty,
+  sanitizer,
+  handler,
+]);
