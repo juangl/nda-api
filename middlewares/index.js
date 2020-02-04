@@ -4,6 +4,7 @@ module.exports = {
   extensions: require('./extensions'),
   grantAccess: require('./grantAccess'),
   persistParams: require('./persistParams'),
+  setPagination: require('./setPagination'),
   setPermissions: require('./setPermissions'),
   verifyProperty: require('./verifyProperty'),
   realEntityMapper: require('./realEntityMapper'),
