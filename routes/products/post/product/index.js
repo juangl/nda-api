@@ -10,14 +10,10 @@ const {
 const sanitizer = createSanitizer(shapes.product);
 
 const handler = async (req, res) => {
-  try {
-    const storeId = req.persistedParams.id; // NOTE: Set in persistParams middleware
-    const newStore = req.body;
-    newStore.storeId = storeId;
-    res.respond(await db.utils.insert('products', newStore));
-  } catch (e) {
-    res.respond(e);
-  }
+  const storeId = req.persistedParams.id; // NOTE: Set in persistParams middleware
+  const newStore = req.body;
+  newStore.storeId = storeId;
+  res.respond(await db.utils.insert('products', newStore));
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);
