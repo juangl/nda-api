@@ -1,8 +1,9 @@
+const debugCreator = require('debug');
 const router = require('express').Router();
 const users = require('./users');
+const orders = require('./orders');
 const stores = require('./stores');
 const likedItems = require('./likedItems');
-const orders = require('./orders');
 const { delete: del, rate } = require('./generic');
 
 router.get('/', (req, res) => {
@@ -19,5 +20,10 @@ router.use('/users', users);
 router.use('/stores', stores);
 router.use('/liked_items', likedItems);
 router.use('/orders', orders);
+
+router.use((err, req, res, next) => {
+  const debug = debugCreator('error-middleware');
+  res.respond(err, err => debug(err.message));
+});
 
 module.exports = router;
