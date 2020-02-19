@@ -7,7 +7,7 @@ module.exports = db => async userId => {
   return (
     await db.query(`
     SELECT * FROM
-      (SELECT * FROM rolespermissions WHERE roleId=${roleId}) a
+      (SELECT * FROM rolesPermissions WHERE roleId=${roleId}) a
     LEFT JOIN permissions b ON a.permissionId=b.id;
   `)
   ).map(each => each.permission);
