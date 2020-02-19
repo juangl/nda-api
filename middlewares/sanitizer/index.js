@@ -1,7 +1,4 @@
 const debug = require('debug')('sanitizer');
-const {
-  general: { respond },
-} = require('../../utils');
 
 module.exports = (shape, config = {}) => (req, res, next) => {
   const { required, secured } = config;
@@ -26,7 +23,7 @@ module.exports = (shape, config = {}) => (req, res, next) => {
   if (required) {
     for (each in shape) {
       if (!(each in sanitized)) {
-        return respond(new Error('Invalid request body'));
+        return res.respond(new Error('Invalid request body'));
       }
     }
   }

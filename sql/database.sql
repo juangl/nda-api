@@ -92,6 +92,7 @@ VALUES
    client permissions
    +create_orders
    +read_orders
+   +update_orders
    +read_stores
    +read_product_images
    +create_product_ratings
@@ -112,6 +113,7 @@ VALUES
    */
   (1, 1),
   (1, 2),
+  (1, 3),
   (1, 6),
   (1, 10),
   (1, 13),
@@ -131,9 +133,11 @@ VALUES
   (1, 32),
   /*
    admin permissions
+   +update_orders
    +create_stores
    +read_stores
    */
+  (1, 3),
   (2, 5),
   (2, 6),
   /*
@@ -216,18 +220,38 @@ CREATE TABLE ratings(
   FOREIGN KEY (userId) REFERENCES users(id)
 ) ENGINE = INNODB;
 
-/*Orders*/
+/*Invoices*/
+CREATE TABLE invoices(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  charge FLOAT(2) NOT NULL,
+  currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
+  isCharged BOOLEAN NOT NULL DEFAULT false,
+  paymentMethod ENUM('cash', 'cc') NOT NULL DEFAULT 'cash',
+  PRIMARY KEY (id)
+) ENGINE = INNODB;
+
+/**
+ * Orders
+ *
+ * status 0 = disabled order, just to show the user
+ * status 1 = accepted order
+ * status 2 = prepared/finished order
+ * status 3 = picked order
+ * status 4 = delivered order
+ */
 CREATE TABLE orders(
   id INTEGER NOT NULL AUTO_INCREMENT,
   userId INTEGER NOT NULL,
   address VARCHAR(255) NOT NULL,
   coords VARCHAR(255) NOT NULL,
-  status INTEGER NOT NULL DEFAULT 1,
+  status INTEGER NOT NULL DEFAULT 0,
   createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   finishedAt TIMESTAMP,
   deliveredAt TIMESTAMP,
+  invoiceId INTEGER NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (userId) REFERENCES users(id)
+  FOREIGN KEY (userId) REFERENCES users(id),
+  FOREIGN KEY (invoiceId) REFERENCES invoices(id)
 ) ENGINE = INNODB;
 
 /*Products*/
@@ -238,7 +262,6 @@ CREATE TABLE products(
   availability BOOLEAN NOT NULL DEFAULT true,
   maxQuantity INTEGER NOT NULL DEFAULT 5,
   price DECIMAL(6, 2) NOT NULL,
-  currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
   PRIMARY KEY (id),
   FOREIGN KEY (storeId) REFERENCES stores(id)
 ) ENGINE = INNODB;

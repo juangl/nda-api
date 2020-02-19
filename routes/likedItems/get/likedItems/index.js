@@ -1,17 +1,10 @@
 const { compose } = require('compose-middleware');
 const { authorize, grantAccess } = require('../../../../middlewares');
-const {
-  db,
-  general: { respond },
-} = require('../../../../utils');
+const { db } = require('../../../../utils');
 
 const handler = async (req, res) => {
-  try {
-    const userId = req.locals.user.id;
-    respond(await db.namespaces.likedItems.getLiked(userId), res);
-  } catch (e) {
-    respond(e, res);
-  }
+  const userId = req.locals.user.id;
+  res.respond(await db.namespaces.likedItems.getLiked(userId));
 };
 
 module.exports = compose([authorize, grantAccess, handler]);

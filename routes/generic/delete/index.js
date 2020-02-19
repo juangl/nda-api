@@ -4,7 +4,6 @@ const {
   db: {
     utils: { delete: del },
   },
-  general: { respond },
 } = require('../../../utils');
 const {
   authorize,
@@ -22,14 +21,10 @@ const prepareSetPermissions = (req, res, next) => {
 };
 
 const handler = async (req, res) => {
-  try {
-    const entityId = req.params.entityId;
-    const entityType = req.params.entityType;
-    const result = await del(entityType, entityId);
-    respond(result, res);
-  } catch (e) {
-    respond(e, res);
-  }
+  const entityId = req.params.entityId;
+  const entityType = req.params.entityType;
+  const result = await del(entityType, entityId);
+  res.respond(result);
 };
 
 module.exports = compose([

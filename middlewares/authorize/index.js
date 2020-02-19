@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('authorize');
-const {
-  general: { respond },
-  db,
-} = require('../../utils');
+const { db } = require('../../utils');
 
 module.exports = async (req, res, next) => {
   req.locals.user = {};
@@ -14,7 +11,7 @@ module.exports = async (req, res, next) => {
     try {
       res.status(200);
       const userId = jwt.verify(token, process.env.JWT_SECRET_KEY).userId;
-      req.locals.user.id = userId;
+      req.locals.user = await db.namespaces.users.getUser(userId);
       req.locals.user.permissions = await db.namespaces.users.getPermissions(
         userId,
       );
@@ -23,12 +20,12 @@ module.exports = async (req, res, next) => {
       );
       next();
     } catch (e) {
-      respond(e, res, () => {
+      res.respond(e, () => {
         debug(`[authorize] There was an error while trying to verify an user`);
       });
     }
   } else {
-    respond(new Error('you must provide a jwt'), res, () => {
+    res.respond(new Error('you must provide a jwt'), () => {
       debug(`[authorize] User tried to request without any token`);
     });
   }

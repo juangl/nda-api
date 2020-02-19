@@ -1,5 +1,6 @@
 module.exports = db => async userId => {
-  const results = await db.query(`
+  const user = (
+    await db.query(`
     SELECT
       a.id,
       a.email,
@@ -15,10 +16,10 @@ module.exports = db => async userId => {
         id=${userId}) a
     LEFT JOIN roles b
     ON a.roleId=b.id
-  `);
+  `)
+  )[0];
 
-  if (!results.length)
-    return new Error(`User with id ${userId} does not exist`);
+  if (!user) return new Error(`User with id ${userId} does not exist`);
 
-  return results[0];
+  return user;
 };
