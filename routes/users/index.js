@@ -13,5 +13,7 @@ router.patch('/', patch.user);
 router.post('/signup', post.signUp);
 // Signin
 router.post('/signin', post.signIn);
+// Validate token
+router.get('/validate_token', get.validateToken);
 
 module.exports = router;

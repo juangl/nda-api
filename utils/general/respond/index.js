@@ -7,7 +7,7 @@ module.exports = function(
 ) {
   const response = {
     success: true,
-    payload: null,
+    payload: undefined,
   };
   switch (true) {
     case result instanceof Error:
@@ -28,9 +28,12 @@ module.exports = function(
     case typeof result === 'object':
       response.payload = result;
       break;
+    case typeof result === 'boolean':
+      response.success = result;
+      break;
     default:
+      response.success = false;
       response.payload = 'There is an unhandled data type in respond function';
-      console.error(new Error(response.payload, result));
       break;
   }
   this.send(response);
