@@ -1,8 +1,8 @@
 module.exports = (req, res, next) => {
-  const { limit, offset } = req.query;
-  req.pagination = {
-    limit: limit || 20,
-    offset: offset || 0,
-  };
+  const { limit = 20, page = 1 } = req.query;
+  const offset = (page - 1) * limit;
+
+  req.pagination = `LIMIT ${limit} OFFSET ${offset}`;
+
   next();
 };

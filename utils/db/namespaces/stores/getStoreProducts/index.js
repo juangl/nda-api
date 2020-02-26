@@ -1,7 +1,7 @@
 const queries = require('../../../utils/queries');
 const { deleteProperties } = require('../../../../general');
 
-module.exports = db => async (storeId, userId) => {
+module.exports = db => async (storeId, userId, pagination) => {
   const products = await db.query(`
       SELECT
         *
@@ -17,7 +17,8 @@ module.exports = db => async (storeId, userId) => {
         p.id = userProductRatings.entityId AND
         userProductRatings.userId = ${userId}
       WHERE
-        p.storeId = ${storeId};
+        p.storeId = ${storeId}
+      ${pagination};
   `);
 
   for (let i = 0; i < products.length; i++) {
