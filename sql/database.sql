@@ -131,13 +131,14 @@ VALUES
   (1, 30),
   (1, 31),
   (1, 32),
+  (1, 34),
   /*
    admin permissions
    +update_orders
    +create_stores
    +read_stores
    */
-  (1, 3),
+  (2, 3),
   (2, 5),
   (2, 6),
   /*
