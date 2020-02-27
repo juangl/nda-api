@@ -1,4 +1,4 @@
-let { router } = require('../../utils');
+let router = require('../../utils/router');
 router = router(['liked_stores', 'liked_products']);
 const get = require('./get');
 const post = require('./post');

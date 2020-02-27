@@ -1,6 +1,7 @@
 const { compose } = require('compose-middleware');
-const { authorize, grantAccess } = require('../../../../middlewares');
-const { db } = require('../../../../utils');
+const namespaces = require('../../../../utils/db/namespaces');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
 
 const handler = async (req, res) => {
   res.respond(await db.namespaces.stores.getStores(req.query.category));

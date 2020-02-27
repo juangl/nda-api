@@ -1,10 +1,9 @@
 const { compose } = require('compose-middleware');
-const {
-  authorize,
-  grantAccess,
-  sanitizer: createSanitizer,
-} = require('../../../../middlewares');
-const { db, shapes } = require('../../../../utils');
+const shapes = require('../../../../utils/shapes');
+const namespaces = require('../../../../utils/db/namespaces');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
+const createSanitizer = require('../../../../middlewares/sanitizer');
 
 const sanitizer = createSanitizer(shapes.order);
 
@@ -13,7 +12,7 @@ const handler = async (req, res) => {
     ...req.body,
     userId: req.locals.user.id,
   };
-  res.respond(await db.namespaces.orders.createOrder(newOrder));
+  res.respond(await namespaces.orders.createOrder(newOrder));
 };
 
 module.exports = compose([authorize, grantAccess, sanitizer, handler]);

@@ -1,12 +1,11 @@
 const debug = require('debug')('patchStore');
 const { compose } = require('compose-middleware');
-const {
-  authorize,
-  grantAccess,
-  sanitizer: createSanitizer,
-  verifyProperty: createVerifyProperty,
-} = require('../../../../middlewares');
-const { db, shapes } = require('../../../../utils');
+const shapes = require('../../../../utils/shapes');
+const dbUtils = require('../../../../utils/db/utils');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
+const createSanitizer = require('../../../../middlewares/sanitizer');
+const createVerifyProperty = require('../../../../middlewares/verifyProperty');
 
 const verifyProperty = createVerifyProperty();
 
@@ -18,7 +17,7 @@ const handler = async (req, res) => {
     res.status(422);
     return res.respond(new Error('Invalid patch'), res);
   }
-  res.respond(await db.utils.patch('stores', storeId, req.body), error => {
+  res.respond(await dbUtils.patch('stores', storeId, req.body), error => {
     if (error) {
       debug(`Store with id ${storeId} has failed by being patched`);
     } else {

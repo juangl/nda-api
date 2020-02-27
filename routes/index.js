@@ -3,9 +3,10 @@ const router = require('express').Router();
 const users = require('./users');
 const orders = require('./orders');
 const stores = require('./stores');
+const rate = require('./generic/rate');
+const del = require('./generic/delete');
 const likedItems = require('./likedItems');
-const { delete: del, rate } = require('./generic');
-const { errorHandler } = require('../middlewares');
+const errorHandler = require('../middlewares/errorHandler');
 
 router.get('/', (req, res) => {
   res.respond({

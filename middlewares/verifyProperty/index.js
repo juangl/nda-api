@@ -1,8 +1,4 @@
-const {
-  db: {
-    utils: { ensureExistance },
-  },
-} = require('../../utils');
+const dbUtils = require('../../utils/db/utils');
 const { secureGet } = require('./helpers');
 
 module.exports = (entityType, idLocation, ownerIdLocation) => (
@@ -52,7 +48,7 @@ module.exports = (entityType, idLocation, ownerIdLocation) => (
     if (!tableName)
       throw new Error(`There isn't any provided entityType to the router`);
 
-    if (ensureExistance(tableName, { id, userId: ownerId })) {
+    if (dbUtils.ensureExistance(tableName, { id, userId: ownerId })) {
       next();
     } else {
       throw new Error('The requester does not own the entity');

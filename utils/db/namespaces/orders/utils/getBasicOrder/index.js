@@ -1,5 +1,5 @@
 const invoices = require('../subQueries/invoices');
-const { deleteProperties } = require('../../../../../general');
+const deleteProperties = require('../../../../../general/deleteProperties');
 
 module.exports = async (db, { orderId, userId, status }) => {
   let whereStatement = '';

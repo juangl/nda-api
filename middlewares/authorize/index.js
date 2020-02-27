@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('authorize');
-const { db } = require('../../utils');
+const namespaces = require('../../utils/db/namespaces');
 
 module.exports = async (req, res, next) => {
   req.locals.user = {};
@@ -11,8 +11,8 @@ module.exports = async (req, res, next) => {
     try {
       res.status(200);
       const userId = jwt.verify(token, process.env.JWT_SECRET_KEY).userId;
-      req.locals.user = await db.namespaces.users.getUser(userId);
-      req.locals.user.permissions = await db.namespaces.users.getPermissions(
+      req.locals.user = await namespaces.users.getUser(userId);
+      req.locals.user.permissions = await namespaces.users.getPermissions(
         userId,
       );
       debug(

@@ -1,10 +1,9 @@
 const debug = require('debug')('patchUser');
 const { compose } = require('compose-middleware');
-const { db, shapes } = require('../../../../utils');
-const {
-  authorize,
-  sanitizer: createSanitizer,
-} = require('../../../../middlewares');
+const shapes = require('../../../../utils/shapes');
+const dbUtils = require('../../../../utils/db/utils');
+const authorize = require('../../../../middlewares/authorize');
+const createSanitizer = require('../../../../middlewares/sanitizer');
 
 const sanitizer = createSanitizer(shapes.user);
 
@@ -18,7 +17,7 @@ const handler = async (req, res) => {
         `User with id ${userId} has failed by patching its profile because didn't respect the allowed shape`,
       );
     });
-  res.respond(await db.utils.patch('users', userId, patch), err => {
+  res.respond(await dbUtils.patch('users', userId, patch), err => {
     if (err) return debug(`Error while pathing the user with id ${userId}`);
     debug(`The user with id ${userId} was patched successfuly`);
   });

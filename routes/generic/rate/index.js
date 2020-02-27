@@ -1,11 +1,8 @@
 const { compose } = require('compose-middleware');
-const {
-  authorize,
-  grantAccess,
-  setPermissions,
-  entityIdParamValidator,
-} = require('../../../middlewares');
-const { db } = require('../../../utils');
+const authorize = require('../../../middlewares/authorize');
+const grantAccess = require('../../../middlewares/grantAccess');
+const setPermissions = require('../../../middlewares/setPermissions');
+const entityIdParamValidator = require('../../../middlewares/entityIdParamValidator');
 
 // NOTE: This is a repeated code
 const prepareSetPermissions = (req, res, next) => {

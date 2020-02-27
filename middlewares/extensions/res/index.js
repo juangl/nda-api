@@ -1,7 +1,5 @@
 const { compose } = require('compose-middleware');
-const {
-  general: { respond },
-} = require('../../../utils');
+const respond = require('../../../utils/general/respond');
 
 module.exports = compose([
   (req, res, next) => {

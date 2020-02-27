@@ -1,5 +1,5 @@
 const queries = require('../../../utils/queries');
-const { deleteProperties } = require('../../../../general');
+const deleteProperties = require('../../../../general/deleteProperties');
 
 module.exports = db => async (storeId, userId) => {
   let result = await db.query(`

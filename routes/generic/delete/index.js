@@ -1,17 +1,11 @@
 const { camelCase } = require('change-case');
 const { compose } = require('compose-middleware');
-const {
-  db: {
-    utils: { delete: del },
-  },
-} = require('../../../utils');
-const {
-  authorize,
-  grantAccess,
-  setPermissions,
-  realEntityMapper,
-  entityIdParamValidator,
-} = require('../../../middlewares');
+const { delete: del } = require('../../../utils/db/utils');
+const authorize = require('../../../middlewares/authorize');
+const grantAccess = require('../../../middlewares/grantAccess');
+const setPermissions = require('../../../middlewares/setPermissions');
+const realEntityMapper = require('../../../middlewares/realEntityMapper');
+const entityIdParamValidator = require('../../../middlewares/entityIdParamValidator');
 
 const prepareSetPermissions = (req, res, next) => {
   setPermissions([req.params.entityType])(req, res, () => {

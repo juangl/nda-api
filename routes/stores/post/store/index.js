@@ -1,11 +1,10 @@
 const debug = require('debug')('postStore');
 const { compose } = require('compose-middleware');
-const { db, shapes } = require('../../../../utils');
-const {
-  authorize,
-  grantAccess,
-  sanitizer: createSanitizer,
-} = require('../../../../middlewares');
+const shapes = require('../../../../utils/shapes');
+const dbUtils = require('../../../../utils/db/utils');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
+const createSanitizer = require('../../../../middlewares/sanitizer');
 
 const sanitizer = createSanitizer(shapes.store, {
   secured: true,
@@ -16,7 +15,7 @@ const handler = async (req, res) => {
   const ownerId = req.locals.user.id;
   debug(`A new store is being made for the user with id ${ownerId}`);
   req.body.ownerId = ownerId;
-  res.respond(await db.utils.insert('stores', req.body), error => {
+  res.respond(await dbUtils.insert('stores', req.body), error => {
     if (error) {
       debug(`User with id ${ownerId} has failed by creating a new store`);
     } else {

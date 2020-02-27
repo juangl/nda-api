@@ -1,6 +1,6 @@
 const get = require('./get');
 const post = require('./post');
-let { router } = require('../../utils');
+let router = require('../../utils/router');
 
 router = router(['products']);
 

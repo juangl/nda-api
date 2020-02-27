@@ -1,10 +1,8 @@
 const { compose } = require('compose-middleware');
-const { db } = require('../../../../utils');
-const {
-  authorize,
-  grantAccess,
-  verifyProperty: createVerifyProperty,
-} = require('../../../../middlewares');
+const namespaces = require('../../../../utils/db/namespaces');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
+const createVerifyProperty = require('../../../../middlewares/verifyProperty');
 const { convertStringToStatus, canChangeToStatus } = require('./helpers');
 
 const verifyProperty = createVerifyProperty();
@@ -17,7 +15,7 @@ const handler = async (req, res) => {
       `The current user can't change the order status to ${orderStatus}`,
     );
   }
-  res.respond(await db.namespaces.orders.setOrderStatus(id, statusNumber));
+  res.respond(await namespaces.orders.setOrderStatus(id, statusNumber));
 };
 
 module.exports = compose([authorize, grantAccess, verifyProperty, handler]);

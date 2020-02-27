@@ -1,9 +1,10 @@
 const { compose } = require('compose-middleware');
-const { authorize, grantAccess } = require('../../../../middlewares');
-const { db } = require('../../../../utils');
+const namespaces= require('../../../../utils/db/namespaces');
+const authorize = require('../../../../middlewares/authorize');
+const grantAccess = require('../../../../middlewares/grantAccess');
 
 const handler = async (req, res) => {
-  res.respond(await db.namespaces.orders.getOrders(req.locals.user.id));
+  res.respond(await namespaces.orders.getOrders(req.locals.user.id));
 };
 
 module.exports = compose([authorize, grantAccess, handler]);

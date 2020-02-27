@@ -1,7 +1,7 @@
 const get = require('./get');
-const patch = require('./patch');
 const post = require('./post');
-let { router } = require('../../utils');
+const patch = require('./patch');
+let router = require('../../utils/router');
 
 router = router(['orders']);
 

@@ -2,8 +2,8 @@ const get = require('./get');
 const post = require('./post');
 const patch = require('./patch');
 const products = require('../products');
-let { router } = require('../../utils');
-const { persistParams } = require('../../middlewares');
+let router = require('../../utils/router');
+const persistParams = require('../../middlewares/persistParams');
 
 router = router(['stores']);
 
