@@ -14,11 +14,15 @@ const prepareSetPermissions = (req, res, next) => {
   });
 };
 
-const handler = async (req, res) => {
-  const entityId = req.params.entityId;
-  const entityType = req.params.entityType;
-  const result = await del(entityType, entityId);
-  res.respond(result);
+const handler = async (req, res, next) => {
+  try {
+    const entityId = req.params.entityId;
+    const entityType = req.params.entityType;
+    const result = await del(entityType, entityId);
+    res.respond(result);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = compose([
