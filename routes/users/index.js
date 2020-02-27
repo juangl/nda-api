@@ -16,4 +16,6 @@ router.post('/signin', post.signIn);
 // Validate token
 router.get('/validate_token', get.validateToken);
 
+router.addErrorHandlerMiddleware();
+
 module.exports = router;

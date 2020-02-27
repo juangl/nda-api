@@ -263,6 +263,7 @@ CREATE TABLE products(
   availability BOOLEAN NOT NULL DEFAULT true,
   maxQuantity INTEGER NOT NULL DEFAULT 5,
   price DECIMAL(6, 2) NOT NULL,
+  description text NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (storeId) REFERENCES stores(id)
 ) ENGINE = INNODB;

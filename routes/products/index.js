@@ -9,5 +9,6 @@ router.post('/', post.product);
 // Get products
 router.get('/', get.products);
 
+router.addErrorHandlerMiddleware();
 
 module.exports = router;

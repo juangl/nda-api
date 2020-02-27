@@ -5,6 +5,7 @@ const orders = require('./orders');
 const stores = require('./stores');
 const likedItems = require('./likedItems');
 const { delete: del, rate } = require('./generic');
+const { errorHandler } = require('../middlewares');
 
 router.get('/', (req, res) => {
   res.respond({
@@ -21,9 +22,6 @@ router.use('/stores', stores);
 router.use('/liked_items', likedItems);
 router.use('/orders', orders);
 
-router.use((err, req, res, next) => {
-  const debug = debugCreator('error-middleware');
-  res.respond(err, err => debug(err.message));
-});
+router.use(errorHandler);
 
 module.exports = router;

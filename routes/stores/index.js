@@ -15,7 +15,9 @@ router.post('/', post.store);
 router.get('/:id', get.store);
 // Patch store
 router.patch('/:id', patch.store);
-
+// Products router
 router.use('/:id/products', persistParams, products);
+
+router.addErrorHandlerMiddleware();
 
 module.exports = router;

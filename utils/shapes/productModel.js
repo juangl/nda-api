@@ -4,8 +4,9 @@ module.exports = {
     type: 'number',
   },
   name: 'string',
-  availability: 'number',
-  maxQuantity: 'number',
   price: 'number',
+  description: 'string',
+  maxQuantity: 'number',
+  availability: 'number',
   // currency: 'string' // NOTE: This might have to be uncommented in the future
 };
