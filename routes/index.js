@@ -1,8 +1,8 @@
-const debugCreator = require('debug');
 const router = require('express').Router();
 const users = require('./users');
 const orders = require('./orders');
 const stores = require('./stores');
+const products = require('./products');
 const rate = require('./generic/rate');
 const del = require('./generic/delete');
 const likedItems = require('./likedItems');
@@ -19,9 +19,10 @@ router.delete('/:entityType/:entityId', del);
 router.post('/:entityType/:entityId/rate', rate);
 
 router.use('/users', users);
-router.use('/stores', stores);
-router.use('/liked_items', likedItems);
 router.use('/orders', orders);
+router.use('/stores', stores);
+router.use('/products', products);
+router.use('/liked_items', likedItems);
 
 router.use(errorHandler);
 

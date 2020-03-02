@@ -1,10 +1,13 @@
 const get = require('./get');
+const post = require('./post');
 let router = require('../../utils/router');
 
 router = router(['products']);
 
-// Get products by search
-router.get('/', get.productsBySearch);
+// Create product
+router.post('/', post.product);
+// Get products
+router.get('/', get.products);
 
 router.addErrorHandlerMiddleware();
 

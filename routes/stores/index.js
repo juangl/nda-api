@@ -1,8 +1,8 @@
 const get = require('./get');
 const post = require('./post');
 const patch = require('./patch');
-const products = require('../products');
 let router = require('../../utils/router');
+const productsStoreRouter = require('../products/storeRouter');
 const persistParams = require('../../middlewares/persistParams');
 
 router = router(['stores']);
@@ -16,7 +16,7 @@ router.get('/:id', get.store);
 // Patch store
 router.patch('/:id', patch.store);
 // Products router
-router.use('/:id/products', persistParams, products);
+router.use('/:id/products', persistParams, productsStoreRouter);
 
 router.addErrorHandlerMiddleware();
 

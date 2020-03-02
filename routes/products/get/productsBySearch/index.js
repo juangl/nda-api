@@ -1,17 +1,20 @@
 const { compose } = require('compose-middleware');
-const debug = require('debug')('getStoreProducts');
+const debug = require('debug')('getStoreProductsBySearch');
 const namespaces = require('../../../../utils/db/namespaces');
 const authorize = require('../../../../middlewares/authorize');
 const grantAccess = require('../../../../middlewares/grantAccess');
 const setPagination = require('../../../../middlewares/setPagination');
+const createRequiredQueryParams = require('../../../../middlewares/requiredQueryParams');
+
+const requiredQueryParams = createRequiredQueryParams(['keyword']);
 
 const handler = async (req, res, next) => {
   try {
-    const storeId = req.persistedParams.id; // NOTE: Set in persistParams middleware
+    const keyword = req.query.keyword;
     const userId = req.locals.user.id;
     res.respond(
-      await namespaces.stores.getStoreProducts(
-        storeId,
+      await namespaces.products.getProductsBySearch(
+        keyword,
         userId,
         req.pagination.sqlString,
       ),
@@ -21,4 +24,10 @@ const handler = async (req, res, next) => {
   }
 };
 
-module.exports = compose([authorize, grantAccess, setPagination, handler]);
+module.exports = compose([
+  authorize,
+  grantAccess,
+  requiredQueryParams,
+  setPagination,
+  handler,
+]);

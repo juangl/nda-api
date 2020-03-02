@@ -1,10 +1,10 @@
 const debug = require('debug')('responder');
 
-module.exports = function(
+module.exports = (req, res) => (
   result,
   callback = err =>
     debug(`Gotten a${err ? 'n error' : 'success'} type response`),
-) {
+) => {
   const response = {
     success: true,
     payload: undefined,
@@ -25,6 +25,18 @@ module.exports = function(
         };
       break;
     case Array.isArray(result):
+      if (req.pagination) {
+        response.payload = {
+          metadata: {
+            ...req.pagination.config,
+            count: result.length,
+          },
+          data: result,
+        };
+      } else {
+        response.payload = result;
+      }
+      break;
     case typeof result === 'object':
       response.payload = result;
       break;
@@ -36,6 +48,6 @@ module.exports = function(
       response.payload = 'There is an unhandled data type in respond function';
       break;
   }
-  this.send(response);
+  res.send(response);
   callback(!response.success);
 };
