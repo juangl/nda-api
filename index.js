@@ -1,3 +1,4 @@
+require('./utils/polyfills');
 const path = require('path');
 const dotenv = require('dotenv');
 const express = require('express');
