@@ -268,6 +268,23 @@ CREATE TABLE products(
   FOREIGN KEY (storeId) REFERENCES stores(id)
 ) ENGINE = INNODB;
 
+/*Categories*/
+CREATE TABLE categories(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  category VARCHAR(32),
+  PRIMARY KEY (id)
+) ENGINE = INNODB;
+
+/*Categories products*/
+CREATE TABLE categoriesProducts(
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  productId INTEGER NOT NULL,
+  categoryId INTEGER NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (productId) REFERENCES products(id),
+  FOREIGN KEY (categoryId) REFERENCES categories(id)
+) ENGINE = INNODB;
+
 /*Orders Products*/
 CREATE TABLE ordersProducts(
   id INTEGER NOT NULL AUTO_INCREMENT,

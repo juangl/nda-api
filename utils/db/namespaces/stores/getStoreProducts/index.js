@@ -1,25 +1,32 @@
 const queries = require('../../../utils/queries');
 const deleteProperties = require('../../../../general/deleteProperties');
+const whereClauseComposer = require('../../../utils/whereClauseComposer');
 
-module.exports = db => async (storeId, userId, pagination) => {
-  const products = await db.query(`
-      SELECT
-        *
-      FROM
-        products p
-      LEFT JOIN
-        (${queries.ratings('product')}) productRatings
-      ON
-        p.id = productRatings.entityId
-      LEFT JOIN
-        (${queries.userRatings('product')}) userProductRatings
-      ON
-        p.id = userProductRatings.entityId AND
-        userProductRatings.userId = ${userId}
-      WHERE
-        p.storeId = ${storeId}
-      ${pagination};
-  `);
+module.exports = db => async (storeId, userId, config) => {
+  const { pagination, filters } = config;
+
+  const query = `
+  SELECT
+    *
+  FROM
+    products p
+  LEFT JOIN
+    (${queries.ratings('product')}) productRatings
+  ON
+    p.id = productRatings.entityId
+  LEFT JOIN
+    (${queries.userRatings('product')}) userProductRatings
+  ON
+    p.id = userProductRatings.entityId AND
+    userProductRatings.userId = ${userId}
+  ${filters.join('p') /*Product table alias*/}
+  ${whereClauseComposer(
+    [`p.storeId = ${storeId}`, filters.whereClause].filter(a => a),
+  )}
+  ${pagination.sqlString};
+`;
+
+  const products = await db.query(query);
 
   for (let i = 0; i < products.length; i++) {
     const currentProduct = products[i];
@@ -31,6 +38,7 @@ module.exports = db => async (storeId, userId, pagination) => {
       'userId',
       'storeId',
       'entityId',
+      'productId',
       'userRatings',
     ]);
   }
