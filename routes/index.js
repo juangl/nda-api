@@ -15,6 +15,8 @@ router.get('/', (req, res) => {
   });
 });
 
+router.use('/liked_items', likedItems);
+
 router.delete('/:entityType/:entityId', del);
 router.post('/:entityType/:entityId/rate', rate);
 
@@ -22,7 +24,6 @@ router.use('/users', users);
 router.use('/orders', orders);
 router.use('/stores', stores);
 router.use('/products', products);
-router.use('/liked_items', likedItems);
 
 router.use(errorHandler);
 

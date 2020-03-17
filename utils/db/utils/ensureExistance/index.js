@@ -26,6 +26,7 @@ module.exports = db => async (tableName, object, configuration = '1') => {
       break;
   }
   validateNumber(amount);
+  amount = Number(amount);
 
   const objectEntries = Object.entries(object);
 
