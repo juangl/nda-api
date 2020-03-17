@@ -1,7 +1,9 @@
 module.exports = entityType => `
   SELECT
-    *,
-    COUNT(*) as likesCount
+    userId,
+    entityId,
+    entityType,
+    COUNT(id) as likesCount
   FROM
     likedItems
   WHERE

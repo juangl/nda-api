@@ -47,7 +47,7 @@ module.exports = (req, res, next) => {
     join: productsTableName => {
       return filters.category
         ? `RIGHT JOIN
-          (SELECT * FROM
+          (SELECT categoryId, productId FROM
             categoriesProducts cp
           WHERE cp.categoryId = ${filters.category}
           ) c
