@@ -9,7 +9,7 @@ const handler = async (req, res, next) => {
   try {
     const entityId = req.params.entityId;
     const exists = await ensureExistance('likedItems', {
-      id: entityId,
+      id: Number(entityId),
       userId: req.locals.user.id,
     });
     if (!exists) {
