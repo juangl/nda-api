@@ -1,10 +1,10 @@
 module.exports = entityType => `
   SELECT
-    r.entityId,
-    AVG(r.stars) as rating,
-    COUNT(r.stars) as whoRated
-  FROM ratings r
+    entityId,
+    AVG(stars) as rating,
+    COUNT(stars) as whoRated
+  FROM ratings
   WHERE
-    r.entityType = "${entityType}"
+    entityType = "${entityType}"
   GROUP BY entityId
 `;

@@ -1,11 +1,11 @@
 module.exports = entityType => `
   SELECT
-    r.userId,
-    r.entityId,
-    COUNT(r.entityId) as userRatings
+    userId,
+    entityId,
+    COUNT(entityId) as userRatings
   FROM
-    ratings r
+    ratings
   WHERE
-    r.entityType = "${entityType}"
-  GROUP BY r.entityId, r.userId
+    entityType = "${entityType}"
+  GROUP BY entityId, userId
 `;
