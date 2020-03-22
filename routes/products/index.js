@@ -8,6 +8,8 @@ router.get('/', get.productsBySearch);
 
 router.get('/filters', get.productFilters);
 
+router.get('/certain', get.certainProducts);
+
 router.addErrorHandlerMiddleware();
 
 module.exports = router;
