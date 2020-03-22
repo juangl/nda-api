@@ -34,26 +34,33 @@ module.exports = (req, res, next) => {
     }
   }
 
-  let whereClause = '';
+  let joinSqlString = '';
+  let whereSqlString = '';
 
   if (filters.priceRange) {
     const { min, max } = filters.priceRange;
-    whereClause = ` price BETWEEN ${min} AND ${max}`;
+    whereSqlString = ` price BETWEEN ${min} AND ${max}`;
+  }
+
+  if (filters.category) {
+    joinSqlString = `
+    RIGHT JOIN
+      (
+        SELECT
+          categoryId,
+          productId
+        FROM
+          categoriesProducts cp
+        WHERE
+          cp.categoryId = ${filters.category}
+      ) c
+    ON products.id = c.productId`;
   }
 
   req.filters = {
-    whereClause,
+    joinSqlString,
+    whereSqlString,
     config: filters,
-    join: productsTableName => {
-      return filters.category
-        ? `RIGHT JOIN
-          (SELECT categoryId, productId FROM
-            categoriesProducts cp
-          WHERE cp.categoryId = ${filters.category}
-          ) c
-        ON ${productsTableName}.id = c.productId`
-        : '';
-    },
   };
 
   next();
